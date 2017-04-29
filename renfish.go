@@ -13,9 +13,14 @@ import (
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("indexhandler - start")
 	index := struct{ Conf conf.Configuration }{conf.Config()}
-	t, _ := template.ParseFiles("idx.html", "templates/header.html", "templates/topbar.html", "templates/bottombar.html")
+	t, e := template.ParseFiles("idx.html", "templates/header.html", "templates/topbar.html", "templates/bottombar.html")
+	if e != nil {
+		panic(e)
+	}
 	log.Print("indexhandler - execute")
-	t.Execute(w, index)
+	if e = t.Execute(w, index); e != nil {
+		panic(e)
+	}
 }
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
@@ -74,8 +79,8 @@ func main() {
 	privkey := "/etc/letsencrypt/live/renfish.com/privkey.pem"
 	err := http.ListenAndServeTLS(":443", cert, privkey, nil)
 	if err != nil {
-		cert = "./src/generate_cert/cert.pem"
-		privkey = "./src/generate_cert/key.pem"
+		cert = "./generate_cert/cert.pem"
+		privkey = "./generate_cert/key.pem"
 		err = http.ListenAndServeTLS(":10443", cert, privkey, nil)
 		if err != nil {
 			log.Print("HTTPS ListenAndServe: ", err)
