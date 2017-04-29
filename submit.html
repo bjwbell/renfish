@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>Renroll - Sign Up</title>
+    {{template "Header" .}}
+    <link rel="stylesheet" type="text/css" href="css/topbar.css" />
+  </head>
+  <body>
+      <nav class="navbar navbar-fixed-top" role="navigation">
+          <div class="container">
+              <div class="navbar-header">
+                  <h1 class="doordash-logo doordash-logo-inverted">
+                      &nbsp;&nbsp;<a href="index.html" id="renroll">Renroll</a>
+                  </h1>
+              </div>
+              <br>
+          </div>
+      </nav>
+      <div class="body-content">
+          <br>
+          <h2>Sign In With:</h2>
+          <span id="gSigninButton">
+              <span id="g-callback"
+                    callback="gSignup">            
+              </span>
+              <span class="g-signin"
+                    data-callback="gSignin"
+                    data-height="tall"
+                    data-width="wide"
+                    data-clientid="{{ .Conf.GoogleClientId }}"
+                    data-cookiepolicy="single_host_origin"
+                    data-scope="{{ .Conf.GooglePlusScopes }}">
+              </span>
+          </span>
+          <br>
+          <span id="fbSigninButton">
+              <span class="fb-login-button"
+                    data-max-rows="1"
+                    data-size="xlarge"
+                    data-show-faces="false"
+                    data-scope="{{ .Conf.FacebookScopes }}"
+                    onlogin="fbSignup"
+                    data-auto-logout-link="true">
+              </span>
+          </span>
+          <br>
+          <div id="status">
+          </div>
+          <br>
+      </div>
+      {{template "Bottombar"}}
+  </body>
+</html>

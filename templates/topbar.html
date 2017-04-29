@@ -1,0 +1,54 @@
+{{define "Topbar"}}
+<link rel="stylesheet" type="text/css" href="css/topbar.css" />
+<nav class="navbar navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <h1 class="doordash-logo doordash-logo-inverted">
+                &nbsp;&nbsp;<a href="index" class="renroll-link">Renroll</a>
+            </h1>
+        </div>
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/rentroll" class="topbar-item">Rent Roll</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/tenant" class="topbar-item">Tenants</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="/rentrolltemplate" class="topbar-item">Rent Roll Template</a>        
+        <span id="topbarsigninButton">
+            <span id="g-callback"
+                  callback="{{if .Conf.GPlusSigninCallback}}{{.Conf.GPlusSigninCallback}}{{end}}">            
+            </span>
+            <span id="gSigninButton">
+                <span class="g-signin"
+                      data-callback="gSignin"
+                      data-clientid="{{ .Conf.GoogleClientId }}"
+                      data-cookiepolicy="single_host_origin"
+                      data-scope="{{ .Conf.GooglePlusScopes }}">
+                </span>        
+            </span>
+        </span>
+        <span id="topbarsigninButton">
+            <span id="fb-callback"
+                  callback="{{if .Conf.FacebookSigninCallback}}{{.Conf.FacebookSigninCallback}}{{end}}">            
+            </span>        
+            <span id="fbEmail"></span>
+            <span id="fbSigninButton">
+                <span class="fb-login-button"
+                      data-max-rows="1"
+                      data-size="large"
+                      data-show-faces="false"
+                      data-scope="{{.Conf.FacebookScopes}}"
+                      onlogin="fbLogin"
+                      data-auto-logout-link="true">
+                </span>
+            </span>
+            <span id="topbarsignoutButton">
+                <span id="gSignoutButton">
+                </span>
+                <a href="/settings" class="settings" id="gsettings">Settings</a>
+            </span>
+            <a href="/settings" class="settings" id="fbsettings">Settings</a>
+        </span>
+    </div>
+</nav>
+{{end}}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+        <title>About</title>
+        {{template "Header" .}}
+        <link rel="stylesheet" type="text/css" href="css/settings.css" />
+    </head>
+    <body>
+        {{template "Topbar" .}}
+        <div class="body-content">
+            <p class="settings-table">                
+                <table border="0">
+                    <tr><td><b>Name</b></td><td><div id="name"></div></td></tr>
+                    <tr><td><b>Email</b></td><td><div id="email"></div></td></tr>
+                </table>
+            </p>
+        </div>
+        {{template "Bottombar"}}
+    </body>
+</html>

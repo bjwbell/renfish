@@ -1,0 +1,28 @@
+<script>
+ alert('SigninForm');
+</script>
+<br/>
+<h2>Sign In:</h2>
+          <span id="gSigninButton">
+              <span id="g-callback"
+                    callback="gSigninForm">            
+              </span>
+              <span class="g-signin"
+                    data-callback="gSignin"
+                    data-height="tall"
+                    data-width="wide"
+                    data-clientid="{{ .Conf.GoogleClientId }}"
+                    data-cookiepolicy="single_host_origin"
+                    data-scope="{{ .Conf.GooglePlusScopes }}">
+              </span>
+          </span>
+          <br/>
+          <span class="fb-login-button"
+                data-max-rows="1"
+                data-size="xlarge"
+                data-show-faces="false"
+                data-scope="{{ .Conf.FacebookScopes }}"
+                onlogin="fbSigninForm"
+                data-auto-logout-link="true">
+          </span>
+          <br/>

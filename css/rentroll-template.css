@@ -1,0 +1,78 @@
+.as-of-date {
+    border:1px dashed black;
+    padding:4px;
+    border-radius: 3px;    
+}
+
+.rentroll-table {
+    border:1px dashed black;
+    box-shadow: 2px 2px 2px #888888;
+    border-radius: 5px;
+    border-collapse:collapse;
+    padding: 10px;
+}
+
+
+.default-th {
+    border:0px dotted black;
+}
+
+.th-tenant {
+    border:0px dotted black;
+    width:228px;
+}
+
+.th-address {
+    border:0px dotted black;
+    width:300px;
+}
+
+.th-comments {
+    border:0px dotted black;
+    width:200px;
+}
+
+
+.default-td {
+    border:1px solid black;
+}
+
+.td-no-border {
+    border:0px dotted black;
+}
+.undo {
+    font-size: xx-large;
+    color: salmon;
+    text-align: center;
+    width: 100%;
+}
+
+a.undo:link, a.undo:visited {
+    text-decoration: none;
+    text-align: center;
+}
+
+a.undo:hover {
+    text-decoration: underline;
+}
+
+a.invoices {
+    font-size: x-large;
+    color: dimgray;
+}
+a.invoices:link, a.invoices:visited {
+    text-decoration: none;
+}
+a.invoices:hover {
+    text-decoration: underline;
+}
+
+a.tenant {
+    color: dimgray;
+}
+a.tenant:link, a.tenant:visited {
+    text-decoration: none;
+}
+a.tenant:hover {
+    text-decoration: underline;
+}

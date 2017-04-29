@@ -1,0 +1,22 @@
+.front-page-item {
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px #888888;
+}
+
+a.front-page-sign-in:link, a.front-page-sign-in:visited {
+    /*color: #000000;*/
+    font-size: large;
+    text-decoration: none;
+}
+a.front-page-sign-in:hover{
+    text-decoration: underline;
+}
+
+a.rentroll-template:link, a.rentroll-template:visited {
+    /*color: #000000;*/
+    font-size: large;
+    text-decoration: none;
+}
+a.rentroll-template:hover{
+    text-decoration: underline;
+}

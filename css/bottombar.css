@@ -1,0 +1,20 @@
+div#bottombar 
+{
+    margin: 0 auto;
+    padding: 4px;
+    background-color:#f5f5f5;
+    border-radius: 7px;
+    a:link, a:visited {
+        color: #000000;
+    }
+}
+
+a.bottombar:link, a.bottombar:visited {
+    color: #000000;
+    font-size: x-large;
+    text-decoration: none;
+}
+
+a.bottombar:hover{
+    text-decoration: underline;
+}
