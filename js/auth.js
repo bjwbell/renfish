@@ -194,13 +194,13 @@ function fbLogin(response) {
 
 function createAccount(email, loginMethod) {
     if (email === '') {
-        console.log("populateRentRoll - empty email!");
+        console.log("createAccount - empty email!");
         return;
     }
     $.ajax({url: '/createaccount',
             data: { 'email': email, 'loginmethod': loginMethod },
             success: function () {
-            window.location.href = '/rentroll';
+            window.location.href = '/unreleased';
         }
            });
 }
