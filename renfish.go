@@ -8,6 +8,7 @@ import (
 	"github.com/bjwbell/renfish/auth"
 	"github.com/bjwbell/renfish/conf"
 	"github.com/bjwbell/renfish/submit"
+	"github.com/bjwbell/renroll/src/renroll"
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -43,6 +44,18 @@ func contactHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, about)
 }
 
+func unreleasedHandler(w http.ResponseWriter, r *http.Request) {
+	conf := struct{ Conf renroll.Configuration }{renroll.Config()}
+	conf.Conf.GPlusSigninCallback = "gSettings"
+	conf.Conf.FacebookSigninCallback = "fbSettings"
+	t, _ := template.ParseFiles(
+		"unreleased.html",
+		"templates/header.html",
+		"templates/topbar.html",
+		"templates/bottombar.html")
+	t.Execute(w, conf)
+}
+
 func settingsHandler(w http.ResponseWriter, r *http.Request) {
 	conf := struct{ Conf conf.Configuration }{conf.Config()}
 	conf.Conf.GPlusSigninCallback = "gSettings"
@@ -66,6 +79,7 @@ func main() {
 	http.HandleFunc("/settings", settingsHandler)
 	http.HandleFunc("/signinform", auth.SigninFormHandler)
 	http.HandleFunc("/submit", submit.SubmitHandler)
+	http.HandleFunc("/unreleased", unreleasedHandler)
 
 	http.Handle("/", http.FileServer(http.Dir("./")))
 	go func() {
