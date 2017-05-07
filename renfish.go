@@ -24,6 +24,19 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func pricing(w http.ResponseWriter, r *http.Request) {
+	log.Print("pricing - start")
+	index := struct{ Conf conf.Configuration }{conf.Config()}
+	t, e := template.ParseFiles("pricing.html", "templates/header.html", "templates/topbar.html", "templates/bottombar.html")
+	if e != nil {
+		panic(e)
+	}
+	log.Print("pricing - execute")
+	if e = t.Execute(w, index); e != nil {
+		panic(e)
+	}
+}
+
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	about := struct{ Conf conf.Configuration }{conf.Config()}
 	t, _ := template.ParseFiles(
@@ -76,6 +89,7 @@ func main() {
 	http.HandleFunc("/index", indexHandler)
 	http.HandleFunc("/logerror", auth.LogErrorHandler)
 	http.HandleFunc("/oauth2callback", auth.Oauth2callback)
+	http.HandleFunc("/pricing", pricing)
 	http.HandleFunc("/settings", settingsHandler)
 	http.HandleFunc("/signinform", auth.SigninFormHandler)
 	http.HandleFunc("/submit", submit.SubmitHandler)
