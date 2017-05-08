@@ -28,9 +28,8 @@ a.topbar-item:hover{
     background-color:mintcream;
     position:relative;
     min-height:40px;
-    margin-bottom:20px;
+    margin-bottom:10px;
     border:1px solid transparent;
-    height:65px;
     border-radius: 5px;
     box-shadow: 3px 3px 2px #888888;
 }
@@ -42,10 +41,6 @@ a.topbar-item:hover{
 
 .navbar-fixed-top
 {
-    /*position:fixed;
-    top:0;
-    right:0;
-    left:0;*/
     z-index:1030;
     border-radius:3;
     padding-left:0;
