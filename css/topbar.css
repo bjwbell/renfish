@@ -22,16 +22,22 @@ a.topbar-item:hover{
     float: right;
 }
 
+.topbar-item {
+    padding: 4px;
+    border-radius: 7px;
+    color: white;
+}
+a.topbar-item:link, a.topbar-item:visited {
+    color: white;
+    font-size: x-large;
+    text-decoration: none;
+}
 
 .navbar
 {
-    background-color:mintcream;
+    background-color: #283F50;
     position:relative;
     min-height:40px;
-    margin-bottom:10px;
-    border:1px solid transparent;
-    border-radius: 5px;
-    box-shadow: 3px 3px 2px #888888;
 }
 
 .navbar-header
@@ -42,12 +48,9 @@ a.topbar-item:hover{
 .navbar-fixed-top
 {
     z-index:1030;
-    border-radius:3;
     padding-left:0;
     padding-right:0;
     padding-top:0;
     padding-bottom:0;
     margin:0;
-    border-width:0 0 1px;
-
 }
