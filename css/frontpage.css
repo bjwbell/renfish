@@ -38,3 +38,16 @@ a.frontpage {
     box-shadow: 1px 1px 1px #888888;
     font-size:xx-large;
 }
+
+#particles-js {
+  height:100%;
+  width:100%;
+  z-index:-1;
+  position:absolute;
+  top:0;
+  left:0;
+}
+
+.carousel-indicators {
+  bottom: -50px;
+}

@@ -82,5 +82,11 @@
           <br />
       </div>
       {{template "Bottombar"}}
+      <div id="particles-js" style="background-image: url(&quot;&quot;); background-color: #283F50;background-size: cover;background-position: 50% 50%; background-repeat: no-repeat;position:absolute;"></div>
+      <script src="js/particles.min.js"></script>
+      <script>
+       /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
+       particlesJS.load('particles-js', 'js/particlesjs-config.json', function() {});
+         </script>
   </body>
 </html>
