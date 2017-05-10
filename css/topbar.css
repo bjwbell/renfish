@@ -1,6 +1,7 @@
 a.topbar-item:link,  a.topbar-item:visited{
     color: #000000;
     font-size: x-large;
+    font-weight:bold;
     text-decoration: none;
 }
 
