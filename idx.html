@@ -8,11 +8,11 @@
     <link rel="stylesheet" type="text/css" href="css/frontpage.css" />
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600,700' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700' rel='stylesheet' type='text/css'>
-    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
   </head>
   <body>
       {{template "Topbar" .}}
-      <div class="body-content">
+      <div class="body-content" style="">
           <p style="color:white;font-size:large;font-weight:bold;">&nbsp;1-click install. No manual server setup. Based on the Open Source <a href="https://github.com/gophish/gophish">Gophish</a> phishing toolkit.</p>
           <div class="gridbox-content" style="display:flex; flex-flow:wrap; width:75%; margin:0 auto;">
               <span style="color:white;margin:auto auto;"><a class="frontpage" href="/submit" class="front-page-sign-in">Create Account</a></span>
@@ -49,15 +49,152 @@
           <br />
           <br />
           <br />
-          <br />
-          <br />
+
+          <div class="container marketing-panel" id="about" style="color:black;">
+              <!-- Three columns of text below the carousel -->
+              <div class="row">
+                  <div class="col-lg-4">
+                      <span class="fa-stack fa-4x">
+                          <i style="color:#283F50" class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+                      </span>
+                      <h2>1. Set Template &amp; Targets</h2>
+                      <!-- <p>Gophish makes it easy to create or import <b>pixel-perfect</b> phishing templates.</p> -->
+                  </div>
+                  <!-- /.col-lg-4 -->
+                  <div class="col-lg-4">
+                      <span class="fa-stack fa-4x">
+                          <i style="color:#283F50" class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-rocket fa-stack-1x fa-inverse"></i>
+                      </span>
+                      <h2>2. Launch Campaign</h2>
+                      <!-- <p>Launch a campaign and phishing emails are sent in the background.</p> -->
+                  </div>
+                  <!-- /.col-lg-4 -->
+                  <div class="col-lg-4">
+                      <span class="fa-stack fa-4x">
+                          <i style="color:#283F50" class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-bar-chart-o fa-stack-1x fa-inverse"></i>
+                      </span>
+                      <h2>3. Track Results</h2>
+                  </div>
+              </div>
+
+
+              <hr class="featurette-divider">
+
+              <div class="row featurette">
+                  <div class="col-md-7">
+                      <h2 class="featurette-heading">
+                          <span class="fa-stack fa-2x">
+                              <i style="color:#283F50" class="fa fa-circle fa-stack-2x"></i>
+                              <i class="fa fa-wrench fa-stack-1x fa-inverse"></i>
+                          </span>
+                          <br/>One-Click Installation
+                      </h2>
+		      <br/>
+                      <ul style="text-align:left">
+                          <li>
+                              <h4>
+                                  <span class="text-muted"><b>Download and Extract the ZIP - </b>
+                                  </span>Gophish binaries are provided for most platforms.
+                              </h4>
+                          </li>
+                          <li>
+                              <h4>
+                                  <span class="text-muted"><b>Run the Binary</b>
+                                  </span>Gophish is a standalone, portable binary with static assets.
+                              </h4>
+                          </li>
+                          <li>
+                              <h4>
+                                  <span class="text-muted"><b>That's It. -</b>
+			          </span>Gophish is now available on http://localhost:3333. Login with <span class="label label-primary">admin:gophish</span>
+                              </h4>
+                          </li>
+                      </ul>
+                  </div>
+                  <div class="col-md-5">
+                      <img class="img-responsive" style="margin-top:20px;display:inline;text-align:center;" src="screenshots/releases.png" alt="Generic placeholder image">
+                  </div>
+              </div>
+
+              <hr class="featurette-divider">
+
+              <div class="row featurette">
+                  <div class="col-md-5">
+                      <img class="featurette-image img-responsive" src="screenshots/templateModal.png" alt="Generic placeholder image">
+                  </div>
+                  <div class="col-md-7">
+                      <h2 class="featurette-heading">
+                          <span class="fa-stack fa-2x">
+                              <i style="color:#283F50" class="fa fa-circle fa-stack-2x"></i>
+                              <i class="fa fa-desktop fa-stack-1x fa-inverse"></i>
+                          </span>
+                          <br />Point-and-Click Phishing
+                      </h2>
+		      <br/>
+                      <ul style="text-align:left">
+                          <li>
+                              <h4>
+                                  <span class="text-muted"><b>Beautiful Web UI</b>
+                                  </span>A full web UI makes creating simulated phishing campaigns easy.
+                              </h4>
+                          </li>
+                          <li>
+                              <h4>
+                                  <span class="text-muted"><b>Pixel-Perfect Phishing</b>
+                                  </span>Create pixel-perfect emails and landing pages from scratch or by importing them directly into gophish.
+                              </h4>
+                          </li>
+                      </ul>
+                  </div>
+              </div>
+
+              <hr class="featurette-divider">
+
+              <div class="row featurette">
+                  <div class="col-md-7">
+                      <h2 class="featurette-heading">
+                          <span class="fa-stack fa-2x">
+                              <i style="color:#283F50" class="fa fa-circle fa-stack-2x"></i>
+                              <i class="fa fa-code fa-stack-1x fa-inverse"></i>
+                          </span>
+                          <br />Automate Phishing Campaigns
+                      </h2>
+		      <br/>
+                      <ul style="text-align:left">
+                          <li>
+                              <h4>
+                                  <span class="text-muted"><b>RESTful API - </b>
+                                  </span>Gophish is built from the ground-up with a fully-featured JSON API.
+                              </h4>
+                          </li>
+                          <li>
+                              <h4>
+                                  <span class="text-muted"><b>Automated Training</b>
+                                  </span>Use your favorite language or API utility to manage every aspect of your phishing training automatically.
+                              </h4>
+                          </li>
+                      </ul>
+                  </div>
+                  <div class="col-md-5">
+                      <img class="featurette-image img-responsive" src="screenshots/postman.png" alt="Generic placeholder image">
+                  </div>
+              </div>
+
+              <hr class="featurette-divider">
+
+              <br />
+              <br />
+              <br />
+              <br />
       </div>
-      {{template "Bottombar"}}
-      <div id="particles-js" style="background-image: url(&quot;&quot;); background-color: #283F50;background-size: cover;background-position: 50% 50%; background-repeat: no-repeat;position:absolute;"></div>
-      <script src="js/particles.min.js"></script>
+      {{template "Bottombar"}}      
+
       <script>
        /* particlesJS.load(@dom-id, @path-json, @callback (optional)); */
-       particlesJS.load('particles-js', 'js/particlesjs-config.json', function() {});
+
          </script>
   </body>
 </html>
