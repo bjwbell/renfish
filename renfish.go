@@ -49,16 +49,6 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, about)
 }
 
-func contactHandler(w http.ResponseWriter, r *http.Request) {
-	about := struct{ Conf conf.Configuration }{conf.Config()}
-	t, _ := template.ParseFiles(
-		"contact.html",
-		"templates/header.html",
-		"templates/topbar.html",
-		"templates/bottombar.html")
-	t.Execute(w, about)
-}
-
 func unreleasedHandler(w http.ResponseWriter, r *http.Request) {
 	conf := struct{ Conf renroll.Configuration }{renroll.Config()}
 	conf.Conf.GPlusSigninCallback = "gSettings"
@@ -101,7 +91,6 @@ func redir(w http.ResponseWriter, req *http.Request) {
 func main() {
 	http.HandleFunc("/about", aboutHandler)
 	http.HandleFunc("/auth/getemail", auth.GetGPlusEmailHandler)
-	http.HandleFunc("/contact", contactHandler)
 	http.HandleFunc("/createaccount", auth.CreateAccountHandler)
 	http.HandleFunc("/index", indexHandler)
 	http.HandleFunc("/logerror", auth.LogErrorHandler)

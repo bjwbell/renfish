@@ -5,15 +5,24 @@
         <meta content="utf-8" http-equiv="encoding">
         <title>About</title>
         {{template "Header" .}}
+        <link rel="stylesheet" type="text/css" href="css/contact.css" />
     </head>
     <body>
         {{template "Topbar" .}}
       <div class="body-content">
           <br>
-          <p>
-              Renfish provides hosting, DevOps, and support for <a href="https://getgophish.com/">Gophish</a>. It is developed by <a href="https://twitter.com/bjwbell">Bryan JW Bell</a>.
+          <p style="font-size:large;">
+              Renfish provides hosting, DevOps, and support for Open Source <a href="https://getgophish.com/">Gophish</a> phishing toolkit. It is developed by <a href="https://twitter.com/bjwbell">Bryan JW Bell</a>.
+          <br/>
+              I've over a decade of experience and have found bugs in both Go (<a href="https://github.com/golang/go/issues/13010">issue#13010</a>) and Docker (<a href="https://github.com/moby/moby/issues/31711">issue#31711</a>).
           </p>
-          <br>
+          <div>
+              <table border="0" class="contact-table">
+                  <tr><td class="contact-td"><b>Email</b></td><td class="contact-td">bjwbell@gmail.com</td></tr>
+                  <tr><td class="contact-td"><b>Mail</b></td><td class="contact-td"><a href="https://www.google.com/maps/place/2556+Zinfandel+Dr,+Rancho+Cordova,+CA+95670">2556 Zinfandel Dr, Rancho Cordova, CA</a></td></tr>
+                  <tr><td class="contact-td"><b>Phone</b></td><td class="contact-td">530-355-5145</td></tr>
+              </table>
+          </div>
           <br>
           <br>
       </div>
