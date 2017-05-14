@@ -89,13 +89,11 @@ func main() {
 
 	http.Handle("/", http.FileServer(http.Dir("./")))
 	go func() {
-		err := http.ListenAndServe(":80", nil)
+		err := http.ListenAndServe(":80", http.HandlerFunc(redir))
 		if err != nil {
-			log.Print("HTTP ListenAndServe :80, ", err)
+			log.Print("HTTP ListenAndServe :8080", err)
 			log.Print("Trying HTTP ListenAndServe :8080.")
-			if err != nil {
-				panic(http.ListenAndServe(":8080", nil))
-			}
+			panic(http.ListenAndServe(":8080", http.HandlerFunc(redir)))
 
 		}
 	}()
