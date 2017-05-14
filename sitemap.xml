@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <url>
+      <loc>https://renfish.com/</loc>
+      <lastmod>2017-05-13</lastmod>
+      <changefreq>daily</changefreq>
+      <priority>0.8</priority>
+   </url>
+   <url>
+      <loc>https://renfish.com/index</loc>
+      <changefreq>weekly</changefreq>
+   </url>
+   <url>
+      <loc>https://renfish.com/about</loc>
+      <changefreq>weekly</changefreq>
+   </url>
+</urlset>
