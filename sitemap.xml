@@ -12,4 +12,8 @@
       <loc>https://renfish.com/about</loc>
       <changefreq>weekly</changefreq>
    </url>
+   <url>
+      <loc>https://renfish.com/submit</loc>
+      <changefreq>weekly</changefreq>
+   </url>
 </urlset>
