@@ -1,7 +1,7 @@
 # renfish
 Gophish Hosting
 
-# Docker container
+# Docker Container
 ## Build
 
 ```
@@ -12,4 +12,8 @@ docker build -t bjwbell/renfish .
 docker login
 docker push bjwbell/renfish
 
+```
+## Run
+```
+docker run -v /etc/letsencrypt/live/renfish.com:/etc/letsencrypt/live/renfish.com -p 80:80 -p 443:443 bjwbell/renfish /renfish/renfish
 ```
