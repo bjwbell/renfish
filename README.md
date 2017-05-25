@@ -16,5 +16,5 @@ docker push bjwbell/renfish
 ## Run
 ```
 docker pull bjwbell/renfish
-docker run -v /etc/letsencrypt:/etc/letsencrypt -p 80:80 -p 443:443 bjwbell/renfish /renfish/renfish
+docker run -v /etc/letsencrypt:/etc/letsencrypt -p 9080:80 -p 9443:443 bjwbell/renfish /renfish/renfish
 ```
