@@ -26,6 +26,32 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func robotsHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("robothandler - start")
+	index := struct{ Conf conf.Configuration }{conf.Config()}
+	t, e := template.ParseFiles("robots.txt")
+	if e != nil {
+		panic(e)
+	}
+	log.Print("robothandler - execute")
+	if e = t.Execute(w, index); e != nil {
+		panic(e)
+	}
+}
+
+func googleAdwordsVerifyHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("adwordsVerifyHandler - start")
+	index := struct{ Conf conf.Configuration }{conf.Config()}
+	t, e := template.ParseFiles("google41fd03a6c9348593.html")
+	if e != nil {
+		panic(e)
+	}
+	log.Print("adwordsVerifyHandler - execute")
+	if e = t.Execute(w, index); e != nil {
+		panic(e)
+	}
+}
+
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	about := struct{ Conf conf.Configuration }{conf.Config()}
 	t, _ := template.ParseFiles(
@@ -87,7 +113,18 @@ func main() {
 	http.HandleFunc("/submit", submit.SubmitHandler)
 	http.HandleFunc("/unreleased", unreleasedHandler)
 
-	http.Handle("/", http.FileServer(http.Dir("./")))
+	http.HandleFunc("/index.html", indexHandler)
+	http.HandleFunc("/robots.txt", robotsHandler)
+	http.HandleFunc("/google41fd03a6c9348593.html", googleAdwordsVerifyHandler)
+
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./css"))))
+	http.Handle("/font-awesome-4.7.0/", http.StripPrefix("/font-awesome-4.7.0/", http.FileServer(http.Dir("./font-awesome-4.7.0"))))
+	http.Handle("/fonts/", http.StripPrefix("/fonts/", http.FileServer(http.Dir("./fonts"))))
+	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
+	http.Handle("/js/", http.StripPrefix("/js/", http.FileServer(http.Dir("./js"))))
+	http.Handle("/screenshots/", http.StripPrefix("/screenshots/", http.FileServer(http.Dir("./screenshots"))))
+	http.HandleFunc("/", indexHandler)
+
 	// HTTP to HTTPS redirection
 	// go func() {
 	// 	err := http.ListenAndServe(":80", http.HandlerFunc(redir))
