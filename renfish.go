@@ -88,12 +88,25 @@ func main() {
 	http.HandleFunc("/unreleased", unreleasedHandler)
 
 	http.Handle("/", http.FileServer(http.Dir("./")))
+	// HTTP to HTTPS redirection
+	// go func() {
+	// 	err := http.ListenAndServe(":80", http.HandlerFunc(redir))
+	// 	if err != nil {
+	// 		log.Print("HTTP ListenAndServe :8080", err)
+	// 		log.Print("Trying HTTP ListenAndServe :8080.")
+	// 		panic(http.ListenAndServe(":8080", http.HandlerFunc(redir)))
+
+	// 	}
+	// }()
+
 	go func() {
-		err := http.ListenAndServe(":80", http.HandlerFunc(redir))
+		err := http.ListenAndServe(":80", nil)
 		if err != nil {
-			log.Print("HTTP ListenAndServe :8080", err)
+			log.Print("HTTP ListenAndServe :80, ", err)
 			log.Print("Trying HTTP ListenAndServe :8080.")
-			panic(http.ListenAndServe(":8080", http.HandlerFunc(redir)))
+			if err != nil {
+				panic(http.ListenAndServe(":8080", nil))
+			}
 
 		}
 	}()
