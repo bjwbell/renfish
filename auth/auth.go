@@ -102,7 +102,7 @@ func getGPlusEmail(tok oauth2.Token) string {
 	dec := json.NewDecoder(strings.NewReader(str))
 	var m OAuth2Response
 	if err := dec.Decode(&m); err != nil {
-		logError(fmt.Sprintf("COULDN'T DECODE OAUTH2 RESPONSE, ERR: %v", err))
+		LogError(fmt.Sprintf("COULDN'T DECODE OAUTH2 RESPONSE, ERR: %v", err))
 		log.Fatal(err)
 	}
 	for _, v := range m.Emails {
@@ -128,7 +128,7 @@ func CreateAccountHandler(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	loginMethod := r.FormValue("loginmethod")
 	if email == "" {
-		logError("CREATE ACCOUNT HANDLER - NO EMAIL")
+		LogError("CREATE ACCOUNT HANDLER - NO EMAIL")
 		success := "false"
 		w.Write([]byte(success))
 		return
@@ -176,13 +176,13 @@ func LogErrorHandler(w http.ResponseWriter, r *http.Request) {
 	SendAdminEmail(conf.Config().GmailAddress, "Renfish JS Error", error)
 }
 
-// The logError function prints the error to log.Print and also emails it to the email
+// The LogError function prints the error to log.Print and also emails it to the email
 // address, GmailAddress, in the config file
-func logError(error string) {
+func LogError(error string) {
 	buf := make([]byte, 1<<16)
 	runtime.Stack(buf, true)
 	trace := fmt.Sprintf("%s", buf)
 	msg := "Go Error\r\nError Message: " + error + "\r\n\r\nStack Trace:\r\n" + trace
-	log.Print("logError:\n" + error)
+	log.Print("LogError:\n" + error)
 	SendAdminEmail(conf.Config().GmailAddress, "Renfish Go Error", msg)
 }
