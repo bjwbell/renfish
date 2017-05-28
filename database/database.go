@@ -56,7 +56,7 @@ func dbCreate(name string) bool {
 	create table users
 (id integer not null primary key,
 TimeStamp text, Email text,
-Name text, Subdomain text);
+Name text, Subdomain text, dockerimageid text);
 	delete from users;
 	`
 	_, err = db.Exec(sqlStmt)
@@ -68,7 +68,7 @@ Name text, Subdomain text);
 	return true
 }
 
-func dbInsert(dbName, userEmail, subdomain string) (int64, bool) {
+func dbInsert(dbName, userEmail, name, subdomain string) (int64, bool) {
 
 	if !dbExists(dbName) {
 		return -1, false
@@ -89,7 +89,7 @@ func dbInsert(dbName, userEmail, subdomain string) (int64, bool) {
 		log.Fatal(err)
 		return -1, false
 	}
-	stmt, err := tx.Prepare("insert into users(id, timestamp, email, subdomain) values(?, ?, ?, ?)")
+	stmt, err := tx.Prepare("insert into users(id, timestamp, email, name, subdomain) values(?, ?, ?, ?, ?)")
 	if err != nil {
 		auth.LogError("Couldn't prepare insert in database (" + dbName + ")" +
 			", userEmail (" + userEmail + ")")
@@ -98,7 +98,7 @@ func dbInsert(dbName, userEmail, subdomain string) (int64, bool) {
 	}
 	defer stmt.Close()
 	var timestamp = time.Now()
-	result, err := stmt.Exec(nil, timestamp, userEmail, subdomain)
+	result, err := stmt.Exec(nil, timestamp, userEmail, name, subdomain)
 	if err != nil {
 		auth.LogError("Couldn't exec insert in database (" + dbName + ")" +
 			", userEmail (" + userEmail + ")")
@@ -115,7 +115,7 @@ func dbInsert(dbName, userEmail, subdomain string) (int64, bool) {
 	return id, true
 }
 
-func dbUpdate(dbName string, userEmail, subdomain string) bool {
+func dbUpdate(dbName string, userEmail, subdomain, dockerImageID string) bool {
 
 	if !dbExists(dbName) {
 		return false
@@ -138,7 +138,7 @@ func dbUpdate(dbName string, userEmail, subdomain string) bool {
 		log.Fatal(err)
 		return false
 	}
-	stmt, err := tx.Prepare("insert into tenants(id, timestamp, useremail, subdomain) values(?, ?, ?, ?)")
+	stmt, err := tx.Prepare("insert into users(id, timestamp, useremail, subdomain, dockerimageid) values(?, ?, ?, ?, ?)")
 	if err != nil {
 		auth.LogError("Couldn't prepare update insert in database (" + dbName + ")" +
 			", userEmail (" + userEmail + ")")
