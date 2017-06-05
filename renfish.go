@@ -98,7 +98,7 @@ func createSite(siteName string) {
 		auth.LogError(fmt.Sprintf("ERROR WRITING NGINX CONF FILE, sitename: %v, filename: %v, err: %v", siteName, fileName, err))
 		return
 	}
-	// Link nginx conf file to sites-enabled
+	// Link nginx conf file to sites-enabled/
 	symlink := "/etc/nginx/sites-enabled/" + siteName + "." + "renfish.com"
 	if err := os.Symlink(fileName, symlink); err != nil {
 		auth.LogError(fmt.Sprintf("ERROR CREATING NGINX CONF FILE SYMLINK, sitename: %v, filename: %v, symlink: %v, err: %v", siteName, fileName, symlink, err))
