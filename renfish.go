@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/bjwbell/renfish/auth"
@@ -105,7 +107,13 @@ func createSite(siteName string) {
 		return
 	}
 	// Reload nginx conf
-	// TODO
+	cmd := exec.Command("nginx", "-s", "reload")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	if err := cmd.Run(); err != nil {
+		auth.LogError(fmt.Sprintf("ERROR RELOADING NGINX CONF, err: %v", err))
+		log.Fatal(err)
+	}
 	// start Gophish container
 	// TODO
 }
