@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -75,6 +76,40 @@ func unreleasedHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, conf)
 }
 
+func createSite(siteName string) {
+	// Add nginx conf file
+	nginxConf := `server {
+    listen              80 default_server;
+    listen 443 ssl default_server;
+    listen [::]:443 ssl;
+    server_name         renfish.com;
+    ssl_certificate     /etc/letsencrypt/live/renfish.com/cert.pem;
+    ssl_certificate_key /etc/letsencrypt/live/renfish.com/privkey.pem;
+    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+    location / {
+            proxy_pass http://127.0.0.1:9080;
+            proxy_set_header Host $host;
+    }
+}`
+	nginxConf = strings.Replace(nginxConf, "renfish.com", siteName+"."+"renfish.com", -1)
+	fileName := "/etc/nginx/sites-available/" + siteName + "." + "renfish.com"
+	if err := ioutil.WriteFile(fileName, []byte(nginxConf), 0644); err != nil {
+		auth.LogError(fmt.Sprintf("ERROR WRITING NGINX CONF FILE, sitename: %v, filename: %v, err: %v", siteName, fileName, err))
+		return
+	}
+	// Link nginx conf file to sites-enabled
+	symlink := "/etc/nginx/sites-enabled/" + siteName + "." + "renfish.com"
+	if err := os.Symlink(fileName, symlink); err != nil {
+		auth.LogError(fmt.Sprintf("ERROR CREATING NGINX CONF FILE SYMLINK, sitename: %v, filename: %v, symlink: %v, err: %v", siteName, fileName, symlink, err))
+		return
+	}
+	// Reload nginx conf
+	// TODO
+	// start Gophish container
+	// TODO
+}
+
 func createsiteHandler(w http.ResponseWriter, r *http.Request) {
 	conf := struct {
 		Conf     renroll.Configuration
@@ -109,6 +144,7 @@ func createsiteHandler(w http.ResponseWriter, r *http.Request) {
 			auth.LogError(fmt.Sprintf("ERROR t.EXECUTE, ERR: %v", err))
 		}
 	} else {
+		createSite(siteName)
 		t, _ := template.ParseFiles(
 			"setup.html",
 			"templates/header.html",
