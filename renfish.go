@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -74,6 +75,51 @@ func unreleasedHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, conf)
 }
 
+func createsiteHandler(w http.ResponseWriter, r *http.Request) {
+	conf := struct {
+		Conf     renroll.Configuration
+		Email    string
+		SiteName string
+	}{renroll.Config(), "", ""}
+	conf.Conf.GPlusSigninCallback = "gSettings"
+	conf.Conf.FacebookSigninCallback = "fbSettings"
+	if err := r.ParseForm(); err != nil {
+		auth.LogError(fmt.Sprintf("ERROR PARSEFORM, ERR: %v", err))
+		t, _ := template.ParseFiles(
+			"setuperror.html",
+			"templates/header.html",
+			"templates/topbar.html",
+			"templates/bottombar.html")
+		if err := t.Execute(w, conf); err != nil {
+			auth.LogError(fmt.Sprintf("ERROR t.EXECUTE, ERR: %v", err))
+		}
+	}
+	email := r.Form.Get("email")
+	siteName := r.Form.Get("sitename")
+	conf.Email = email
+	conf.SiteName = "https://" + siteName + ".renfish.com"
+	if email == "" || siteName == "" {
+		auth.LogError(fmt.Sprintf("MiSSING EMAIL or SITENAME, email: %v, sitename: %v", email, siteName))
+		t, _ := template.ParseFiles(
+			"setuperror.html",
+			"templates/header.html",
+			"templates/topbar.html",
+			"templates/bottombar.html")
+		if err := t.Execute(w, conf); err != nil {
+			auth.LogError(fmt.Sprintf("ERROR t.EXECUTE, ERR: %v", err))
+		}
+	} else {
+		t, _ := template.ParseFiles(
+			"setup.html",
+			"templates/header.html",
+			"templates/topbar.html",
+			"templates/bottombar.html")
+		if err := t.Execute(w, conf); err != nil {
+			auth.LogError(fmt.Sprintf("ERROR t.EXECUTE, ERR: %v", err))
+		}
+	}
+}
+
 func settingsHandler(w http.ResponseWriter, r *http.Request) {
 	conf := struct{ Conf conf.Configuration }{conf.Config()}
 	conf.Conf.GPlusSigninCallback = "gSettings"
@@ -83,7 +129,9 @@ func settingsHandler(w http.ResponseWriter, r *http.Request) {
 		"templates/header.html",
 		"templates/topbar.html",
 		"templates/bottombar.html")
-	t.Execute(w, conf)
+	if err := t.Execute(w, conf); err != nil {
+		auth.LogError(fmt.Sprintf("ERROR t.EXECUTE, ERR: %v", err))
+	}
 }
 
 func redir(w http.ResponseWriter, req *http.Request) {
@@ -112,6 +160,7 @@ func main() {
 	http.HandleFunc("/signinform", auth.SigninFormHandler)
 	http.HandleFunc("/submit", submit.SubmitHandler)
 	http.HandleFunc("/unreleased", unreleasedHandler)
+	http.HandleFunc("/createsite", createsiteHandler)
 
 	http.HandleFunc("/index.html", indexHandler)
 	http.HandleFunc("/robots.txt", robotsHandler)

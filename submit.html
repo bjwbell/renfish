@@ -17,34 +17,24 @@
       </nav>
       <div class="body-content">
           <br>
-          <h2>Sign In With:</h2>
-          <span id="gSigninButton">
-              <span id="g-callback"
-                    callback="gSignup">            
-              </span>
-              <span class="g-signin"
-                    data-callback="gSignin"
-                    data-height="tall"
-                    data-width="wide"
-                    data-clientid="{{ .Conf.GoogleClientId }}"
-                    data-cookiepolicy="single_host_origin"
-                    data-scope="{{ .Conf.GooglePlusScopes }}">
-              </span>
-          </span>
-          <br>
-          <span id="fbSigninButton">
-              <span class="fb-login-button"
-                    data-max-rows="1"
-                    data-size="xlarge"
-                    data-show-faces="false"
-                    data-scope="{{ .Conf.FacebookScopes }}"
-                    onlogin="fbSignup"
-                    data-auto-logout-link="true">
-              </span>
-          </span>
-          <br>
-          <div id="status">
-          </div>
+          <form action="/createsite">
+              <div class="gridbox-content" style="display:flex; flex-flow:wrap; width:75%; margin:0 auto;">
+                  <div>
+                      <label for="email">Email &nbsp;</label>
+                  </div>
+                  <div>
+                      <input type="text" name="email" id="email"><br>
+                  </div>
+                  <div>
+                      <label for="site">&nbsp; Site &nbsp;</label>
+                  </div>
+                  <div>
+                      <input type="text" name="sitename" id="sitename">.renfish.com<br/>
+                  </div>
+              </div>
+              <div><input type="submit" value="Create Account"></div>
+              </div>
+          </form>
           <br>
       </div>
       {{template "Bottombar"}}

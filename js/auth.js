@@ -200,7 +200,7 @@ function createAccount(email, loginMethod) {
     $.ajax({url: '/createaccount',
             data: { 'email': email, 'loginmethod': loginMethod },
             success: function () {
-            window.location.href = '/unreleased';
+            window.location.href = '/setup';
         }
            });
 }
