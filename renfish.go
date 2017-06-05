@@ -97,7 +97,7 @@ func createsiteHandler(w http.ResponseWriter, r *http.Request) {
 	email := r.Form.Get("email")
 	siteName := r.Form.Get("sitename")
 	conf.Email = email
-	conf.SiteName = "https://" + siteName + ".renfish.com"
+	conf.SiteName = "https://" + siteName + "." + r.Host
 	if email == "" || siteName == "" {
 		auth.LogError(fmt.Sprintf("MiSSING EMAIL or SITENAME, email: %v, sitename: %v", email, siteName))
 		t, _ := template.ParseFiles(
