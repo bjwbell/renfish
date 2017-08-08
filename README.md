@@ -7,15 +7,18 @@ Execute `sudo ./launch.sh&`
 # Logs
 Logs are in `renfish.log`
 
+# SSL Certificate
+Execute `certbot renew --pre-hook "service nginx stop" --post-hook "service nginx start"`
+
 # Gophish Container
 
-# Pull
+## Pull
 
 ```
 docker pull bjwbell/gophish-container
 ```
 
-# Run
+## Run
 
 ```
 docker network create --subnet=172.19.0.0/16 gophish
