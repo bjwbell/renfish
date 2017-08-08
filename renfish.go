@@ -78,6 +78,10 @@ func unreleasedHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, conf)
 }
 
+func getNextIP() string {
+	return "172.19.0.2"
+}
+
 func createSite(siteName string) {
 	// Add nginx conf file
 	nginxConf := `server {
@@ -94,7 +98,9 @@ func createSite(siteName string) {
             proxy_set_header Host $host;
     }
 }`
+	ipAddr := getNextIP()
 	nginxConf = strings.Replace(nginxConf, "renfish.com", siteName+"."+"renfish.com", -1)
+	nginxConf = strings.Replace(nginxConf, "127.0.0.1", ipAddr, -1)
 	fileName := "/etc/nginx/sites-available/" + siteName + "." + "renfish.com"
 	if err := ioutil.WriteFile(fileName, []byte(nginxConf), 0644); err != nil {
 		auth.LogError(fmt.Sprintf("ERROR WRITING NGINX CONF FILE, sitename: %v, filename: %v, err: %v", siteName, fileName, err))
@@ -115,7 +121,13 @@ func createSite(siteName string) {
 		log.Fatal(err)
 	}
 	// start Gophish container
-	// TODO
+	cmd = exec.Command("docker", "run", "--net", "gophish", "--ip", ipAddr, "bjwbell/gophish-container", "/gophish/gophish")
+	var out2 bytes.Buffer
+	cmd.Stdout = &out2
+	if err := cmd.Run(); err != nil {
+		auth.LogError(fmt.Sprintf("ERROR STARTING GOPHISH CONTAINER, err: %v", err))
+		log.Fatal(err)
+	}
 }
 
 func createsiteHandler(w http.ResponseWriter, r *http.Request) {
