@@ -1,20 +1,23 @@
 # renfish
 Gophish Hosting
 
-# Docker Container
-## Build
+# Launching
+Execute `sudo ./launch.sh&`
+
+# Logs
+Logs are in `renfish.log`
+
+# Gophish Container
+
+# Pull
 
 ```
-docker build -t bjwbell/renfish .
+docker pull bjwbell/gophish-container
 ```
-## Push
-```
-docker login
-docker push bjwbell/renfish
+
+# Run
 
 ```
-## Run
-```
-docker pull bjwbell/renfish
-docker run -v /etc/letsencrypt:/etc/letsencrypt -p 9080:80 -p 9443:443 -ip 172.17.0.2 bjwbell/renfish /renfish/launch.sh
+docker network create --subnet=172.19.0.0/16 gophish
+docker run --net gophish --ip 172.19.0.2 bjwbell/gophish-container /gophish/gophish
 ```
