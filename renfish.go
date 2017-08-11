@@ -13,6 +13,7 @@ import (
 
 	"github.com/bjwbell/renfish/auth"
 	"github.com/bjwbell/renfish/conf"
+	"github.com/bjwbell/renfish/db"
 	"github.com/bjwbell/renfish/submit"
 	"github.com/bjwbell/renroll/src/renroll"
 )
@@ -79,10 +80,11 @@ func unreleasedHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func getNextIP() string {
-	return "172.19.0.2"
+	ips := db.DbGetIPs(db.DbName)
+	return db.DbGetNextAvailableIP(ips)
 }
 
-func createSite(siteName string) {
+func createSite(emailAddress, siteName string) {
 	// Add nginx conf file
 	nginxConf := `server {
     listen              80 default_server;
@@ -128,6 +130,13 @@ func createSite(siteName string) {
 		auth.LogError(fmt.Sprintf("ERROR STARTING GOPHISH CONTAINER, err: %v", err))
 		log.Fatal(err)
 	}
+	// Save details to database
+	if _, success := db.SaveSite(emailAddress, siteName, ipAddr); !success {
+		auth.LogError(fmt.Sprintf("ERROR SAVING SITE TO DB email (%s), sitename (%s), ip (%s)",
+			emailAddress, siteName, ipAddr))
+		log.Fatal(nil)
+	}
+	return
 }
 
 func createsiteHandler(w http.ResponseWriter, r *http.Request) {
@@ -164,7 +173,7 @@ func createsiteHandler(w http.ResponseWriter, r *http.Request) {
 			auth.LogError(fmt.Sprintf("ERROR t.EXECUTE, ERR: %v", err))
 		}
 	} else {
-		createSite(siteName)
+		createSite(email, siteName)
 		t, _ := template.ParseFiles(
 			"setup.html",
 			"templates/header.html",
@@ -240,6 +249,10 @@ func main() {
 
 	// 	}
 	// }()
+
+	if !db.Exists(db.DbName) {
+		db.Create(db.DbName)
+	}
 
 	go func() {
 		err := http.ListenAndServe(":80", nil)
