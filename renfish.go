@@ -90,7 +90,7 @@ func createSite(emailAddress, siteName string) {
     listen              80;
     listen 443 ssl;
     listen [::]:443 ssl;
-    server_name         renfish.com;
+    server_name  <site-name>;
     ssl_certificate     /etc/letsencrypt/live/renfish.com/cert.pem;
     ssl_certificate_key /etc/letsencrypt/live/renfish.com/privkey.pem;
     ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
@@ -101,7 +101,7 @@ func createSite(emailAddress, siteName string) {
     }
 }`
 	ipAddr := getNextIP()
-	nginxConf = strings.Replace(nginxConf, "renfish.com", siteName+"."+"renfish.com", -1)
+	nginxConf = strings.Replace(nginxConf, "<site-name>", siteName+"."+"renfish.com", -1)
 	nginxConf = strings.Replace(nginxConf, "127.0.0.1", ipAddr, -1)
 	fileName := "/etc/nginx/sites-available/" + siteName + "." + "renfish.com"
 	if err := ioutil.WriteFile(fileName, []byte(nginxConf), 0644); err != nil {
