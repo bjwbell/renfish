@@ -87,7 +87,7 @@ func getNextIP() string {
 func createSite(emailAddress, siteName string) {
 	// Add nginx conf file
 	nginxConf := `server {
-    listen              80 default_server;
+    listen              80;
     listen 443 ssl default_server;
     listen [::]:443 ssl;
     server_name         renfish.com;
