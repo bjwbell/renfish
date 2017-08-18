@@ -87,8 +87,7 @@ func getNextIP() string {
 func createSite(emailAddress, siteName string) {
 	// Add nginx conf file
 	nginxConf := `server {
-    listen              80;
-    listen 443 ssl;
+     listen 443 ssl;
     listen [::]:443 ssl;
     server_name  <site-name>;
     ssl_certificate     /etc/letsencrypt/live/renfish.com/cert.pem;
@@ -96,13 +95,22 @@ func createSite(emailAddress, siteName string) {
     ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
     ssl_ciphers         HIGH:!aNULL:!MD5;
     location / {
-            proxy_pass http://127.0.0.1:9080;
+             proxy_pass https://<ip-address>;
             proxy_set_header Host $host;
     }
-}`
+}
+server {
+    listen              80;
+    server_name  <site-name>;
+    location / {
+            proxy_pass http://<ip-address>;
+             proxy_set_header Host $host;
+    }
+}
+`
 	ipAddr := getNextIP()
 	nginxConf = strings.Replace(nginxConf, "<site-name>", siteName+"."+"renfish.com", -1)
-	nginxConf = strings.Replace(nginxConf, "127.0.0.1", ipAddr, -1)
+	nginxConf = strings.Replace(nginxConf, "<ip-address>", ipAddr, -1)
 	fileName := "/etc/nginx/sites-available/" + siteName + "." + "renfish.com"
 	if err := ioutil.WriteFile(fileName, []byte(nginxConf), 0644); err != nil {
 		auth.LogError(fmt.Sprintf("ERROR WRITING NGINX CONF FILE, sitename: %v, filename: %v, err: %v", siteName, fileName, err))
