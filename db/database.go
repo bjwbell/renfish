@@ -13,7 +13,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const DbName = "renfish.db"
+const DbName = "renfishdb"
 
 // exists returns whether the given file or directory exists or not
 func exists(path string) (bool, error) {
