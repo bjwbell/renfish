@@ -131,7 +131,7 @@ server {
 		log.Fatal(err)
 	}
 	// start Gophish container
-	cmd = exec.Command("docker", "run", "--net", "gophish", "--ip", ipAddr, "bjwbell/gophish-container", "/gophish/gophish")
+	cmd = exec.Command("docker", "run", "-v", "/etc/letsencrypt/live/renfish.com:/gophish/keys", "--net", "gophish", "--ip", ipAddr, "bjwbell/gophish-container", "/gophish/gophish")
 	var out2 bytes.Buffer
 	cmd.Stdout = &out2
 	if err := cmd.Run(); err != nil {
