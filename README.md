@@ -13,7 +13,7 @@ Logs are in `renfish.log`
 Execute `certbot renew --pre-hook "service nginx stop" --post-hook "service nginx start"`
 
 ## Add Subdomain
-Execute `certbot certonly --standalone --pre-hook "service nginx stop" --post-hook "service nginx start" -d renfish.com -d sudomain1.renfish.com -d subdomain2.renfish.com`
+Execute `certbot certonly --standalone --pre-hook "service nginx stop" --post-hook "service nginx start" -d sudomain.renfish.com`
 
 # Gophish Container
 
