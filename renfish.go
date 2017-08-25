@@ -85,17 +85,18 @@ func getNextIP() string {
 }
 
 func createSite(emailAddress, siteName string) {
+	domain := siteName + "." + "renfish.com"
 	// Add nginx conf file
 	nginxConf := `server {
      listen 443 ssl;
     listen [::]:443 ssl;
     server_name  <site-name>;
-    ssl_certificate     /etc/letsencrypt/live/renfish.com/cert.pem;
-    ssl_certificate_key /etc/letsencrypt/live/renfish.com/privkey.pem;
+    ssl_certificate     /etc/letsencrypt/live/<site-name>/cert.pem;
+    ssl_certificate_key /etc/letsencrypt/live/<site-name>/privkey.pem;
     ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
     ssl_ciphers         HIGH:!aNULL:!MD5;
     location / {
-             proxy_pass https://<ip-address>;
+             proxy_pass http://<ip-address>:8080;
             proxy_set_header Host $host;
     }
 }
@@ -109,34 +110,45 @@ server {
 }
 `
 	ipAddr := getNextIP()
-	nginxConf = strings.Replace(nginxConf, "<site-name>", siteName+"."+"renfish.com", -1)
+	nginxConf = strings.Replace(nginxConf, "<site-name>", domain, -1)
 	nginxConf = strings.Replace(nginxConf, "<ip-address>", ipAddr, -1)
 	fileName := "/etc/nginx/sites-available/" + siteName + "." + "renfish.com"
 	if err := ioutil.WriteFile(fileName, []byte(nginxConf), 0644); err != nil {
 		auth.LogError(fmt.Sprintf("ERROR WRITING NGINX CONF FILE, sitename: %v, filename: %v, err: %v", siteName, fileName, err))
 		return
 	}
+
 	// Link nginx conf file to sites-enabled/
 	symlink := "/etc/nginx/sites-enabled/" + siteName + "." + "renfish.com"
 	if err := os.Symlink(fileName, symlink); err != nil {
 		auth.LogError(fmt.Sprintf("ERROR CREATING NGINX CONF FILE SYMLINK, sitename: %v, filename: %v, symlink: %v, err: %v", siteName, fileName, symlink, err))
 		return
 	}
+
+	// create certificate
+	cmd := exec.Command("certbot", "certonly", "--standalone", "--pre-hook", "\"service nginx stop\"", "--post-hook", "\"service nginx start\"", "-d", domain)
+	var out1 bytes.Buffer
+	cmd.Stdout = &out1
+	if err := cmd.Run(); err != nil {
+		auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, out1))
+		log.Fatal(err)
+	}
+
 	// Reload nginx conf
-	cmd := exec.Command("nginx", "-s", "reload")
+	cmd = exec.Command("nginx", "-s", "reload")
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	if err := cmd.Run(); err != nil {
 		auth.LogError(fmt.Sprintf("ERROR RELOADING NGINX CONF, err: %v", err))
 		log.Fatal(err)
 	}
+
 	// start Gophish container
-	domain := siteName + "." + "renfish.com"
-	cmd = exec.Command("docker", "run", "-v", "/etc/letsencrypt/:/gophish/letsencrypt", "-v", "/etc/letsencrypt/live/"+domain+":/gophish/letsencrypt/live/keys", "--net", "gophish", "--ip", ipAddr, "bjwbell/gophish-container", "/gophish/gophish")
+	cmd = exec.Command("docker", "run", "--net", "gophish", "--ip", ipAddr, "bjwbell/gophish-container", "/gophish/gophish")
 	var out2 bytes.Buffer
 	cmd.Stdout = &out2
 	if err := cmd.Run(); err != nil {
-		auth.LogError(fmt.Sprintf("ERROR STARTING GOPHISH CONTAINER, err: %v", err))
+		auth.LogError(fmt.Sprintf("ERROR STARTING GOPHISH CONTAINER, err: %v, stdout: %v", err, out2))
 		log.Fatal(err)
 	}
 	// Save details to database
