@@ -151,6 +151,7 @@ server {
 		auth.LogError(fmt.Sprintf("ERROR STARTING GOPHISH CONTAINER, err: %v, stdout: %v", err, out2))
 		log.Fatal(err)
 	}
+
 	// Save details to database
 	if _, success := db.SaveSite(emailAddress, siteName, ipAddr); !success {
 		auth.LogError(fmt.Sprintf("ERROR SAVING SITE TO DB email (%s), sitename (%s), ip (%s)",
