@@ -118,7 +118,7 @@ server {
 	}
 
 	// create certificate
-	out, err := exec.Command("certbot", "certonly", "-n", "-q", "--standalone", "--pre-hook", "service nginx stop", "--post-hook", "service nginx start", "-d", domain).Output()
+	out, err := exec.Command("certbot", "certonly", "-n", "-q", "--standalone", "--pre-hook", "service nginx stop", "--post-hook", "service nginx start", "-d", domain).CombinedOutput()
 	if err != nil {
 		auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
 		log.Fatal(err)
@@ -136,7 +136,7 @@ server {
 	}
 
 	// Reload nginx conf
-	out, err = exec.Command("nginx", "-s", "reload").Output()
+	out, err = exec.Command("nginx", "-s", "reload").CombinedOutput()
 	if err != nil {
 		auth.LogError(fmt.Sprintf("ERROR RELOADING NGINX CONF, err: %v, stdout: %v", err, string(out)))
 		log.Fatal(err)
@@ -145,7 +145,7 @@ server {
 	}
 
 	// start Gophish container
-	out, err = exec.Command("docker", "run", "--net", "gophish", "--ip", ipAddr, "bjwbell/gophish-container", "/gophish/gophish").Output()
+	out, err = exec.Command("docker", "run", "--net", "gophish", "--ip", ipAddr, "bjwbell/gophish-container", "/gophish/gophish").CombinedOutput()
 	if err != nil {
 		auth.LogError(fmt.Sprintf("ERROR STARTING GOPHISH CONTAINER, err: %v, stdout: %v", err, string(out)))
 		log.Fatal(err)

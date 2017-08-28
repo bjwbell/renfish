@@ -47,14 +47,14 @@
                    data: $("#submitform").serialize(), // serializes the form's elements.
                    success: function(data)
                    {
-                       window.setTimeout(siteredirect,10000);
+                       window.setTimeout(siteredirect, 5000);
                    }
                });
                e.preventDefault(); // avoid to execute the actual submit of the form.
            });
 
            function siteredirect() {
-               var subdomain = $("#submitform").elements["sitename"];
+               var subdomain = document.getElementById("sitename").value;
                window.location.href = 'https://'+subdomain+'.renfish.com';
            }
           </script>
