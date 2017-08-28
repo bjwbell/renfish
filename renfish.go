@@ -118,7 +118,7 @@ server {
 	}
 
 	// create certificate
-	out, err := exec.Command("certbot", "certonly", "-n", "--standalone", "--pre-hook", "\"service nginx stop\"", "--post-hook", "\"service nginx start\"", "-d", domain).Output()
+	out, err := exec.Command("certbot", "certonly", "-n", "-q", "--standalone", "--pre-hook", "service nginx stop", "--post-hook", "service nginx start", "-d", domain).Output()
 	if err != nil {
 		auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
 		log.Fatal(err)
