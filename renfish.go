@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -118,6 +117,13 @@ server {
 		return
 	}
 
+	// create certificate
+	out, err := exec.Command("certbot", "certonly", "-n", "--standalone", "--pre-hook", "\"service nginx stop\"", "--post-hook", "\"service nginx start\"", "-d", domain).Output()
+	if err != nil {
+		auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
+		log.Fatal(err)
+	}
+
 	// Link nginx conf file to sites-enabled/
 	symlink := "/etc/nginx/sites-enabled/" + siteName + "." + "renfish.com"
 	if err := os.Symlink(fileName, symlink); err != nil {
@@ -125,30 +131,17 @@ server {
 		return
 	}
 
-	// create certificate
-	cmd := exec.Command("certbot", "certonly", "--standalone", "--pre-hook", "\"service nginx stop\"", "--post-hook", "\"service nginx start\"", "-d", domain)
-	var out1 bytes.Buffer
-	cmd.Stdout = &out1
-	if err := cmd.Run(); err != nil {
-		auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, out1))
-		log.Fatal(err)
-	}
-
 	// Reload nginx conf
-	cmd = exec.Command("nginx", "-s", "reload")
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	if err := cmd.Run(); err != nil {
-		auth.LogError(fmt.Sprintf("ERROR RELOADING NGINX CONF, err: %v", err))
+	out, err = exec.Command("nginx", "-s", "reload").Output()
+	if err != nil {
+		auth.LogError(fmt.Sprintf("ERROR RELOADING NGINX CONF, err: %v, stdout: %v", err, string(out)))
 		log.Fatal(err)
 	}
 
 	// start Gophish container
-	cmd = exec.Command("docker", "run", "--net", "gophish", "--ip", ipAddr, "bjwbell/gophish-container", "/gophish/gophish")
-	var out2 bytes.Buffer
-	cmd.Stdout = &out2
-	if err := cmd.Run(); err != nil {
-		auth.LogError(fmt.Sprintf("ERROR STARTING GOPHISH CONTAINER, err: %v, stdout: %v", err, out2))
+	out, err = exec.Command("docker", "run", "--net", "gophish", "--ip", ipAddr, "bjwbell/gophish-container", "/gophish/gophish").Output()
+	if err != nil {
+		auth.LogError(fmt.Sprintf("ERROR STARTING GOPHISH CONTAINER, err: %v, stdout: %v", err, string(out)))
 		log.Fatal(err)
 	}
 
