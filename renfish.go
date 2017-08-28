@@ -122,6 +122,8 @@ server {
 	if err != nil {
 		auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
 		log.Fatal(err)
+	} else {
+		fmt.Println("CREATED CERTBOT CERTIFICATE")
 	}
 
 	// Link nginx conf file to sites-enabled/
@@ -129,6 +131,8 @@ server {
 	if err := os.Symlink(fileName, symlink); err != nil {
 		auth.LogError(fmt.Sprintf("ERROR CREATING NGINX CONF FILE SYMLINK, sitename: %v, filename: %v, symlink: %v, err: %v", siteName, fileName, symlink, err))
 		return
+	} else {
+		fmt.Println("CREATED NGINX CONF FILE")
 	}
 
 	// Reload nginx conf
@@ -136,6 +140,8 @@ server {
 	if err != nil {
 		auth.LogError(fmt.Sprintf("ERROR RELOADING NGINX CONF, err: %v, stdout: %v", err, string(out)))
 		log.Fatal(err)
+	} else {
+		fmt.Println("RELOADED NGINX CONF")
 	}
 
 	// start Gophish container
@@ -143,6 +149,8 @@ server {
 	if err != nil {
 		auth.LogError(fmt.Sprintf("ERROR STARTING GOPHISH CONTAINER, err: %v, stdout: %v", err, string(out)))
 		log.Fatal(err)
+	} else {
+		fmt.Println("STARTED GOPHISH CONTAINER")
 	}
 
 	// Save details to database
@@ -150,6 +158,8 @@ server {
 		auth.LogError(fmt.Sprintf("ERROR SAVING SITE TO DB email (%s), sitename (%s), ip (%s)",
 			emailAddress, siteName, ipAddr))
 		log.Fatal(nil)
+	} else {
+		fmt.Println(fmt.Sprintf("SAVED SITE TO DB email (%s), sitename (%s), ip (%s)", emailAddress, siteName, ipAddr))
 	}
 	return
 }
