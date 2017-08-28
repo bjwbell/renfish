@@ -17,7 +17,7 @@
       </nav>
       <div class="body-content">
           <br>
-          <form action="/createsite">
+          <form id="submitform" name="submitform">
               <div class="gridbox-content" style="display:flex; flex-flow:wrap; width:100%; margin:0 auto;">
                   <div>
                       <label for="email">Email &nbsp;</label>
@@ -37,7 +37,26 @@
               </div>
           </form>
           <br>
-      </div>
+          </div>
+          <script>
+           $("#submitform").submit(function(e) {
+               $.ajax({
+                   type: "POST",
+                   url: "/createsite",
+                   data: $("#submitform").serialize(), // serializes the form's elements.
+                   success: function(data)
+                   {
+                       window.setTimeout(siteredirect,10000);
+                   }
+               });
+               e.preventDefault(); // avoid to execute the actual submit of the form.
+           });
+
+           function siteredirect() {
+               var subdomain = $("submitform").elements["sitename"];
+               window.location.href = 'https://'+subdomain+'.renfish.com';
+           }
+          </script>
       {{template "Bottombar"}}
   </body>
 </html>
