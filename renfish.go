@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -10,12 +12,41 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/network"
+	"github.com/docker/docker/client"
+	"golang.org/x/net/context"
+
 	"github.com/bjwbell/renfish/auth"
 	"github.com/bjwbell/renfish/conf"
 	"github.com/bjwbell/renfish/db"
 	"github.com/bjwbell/renfish/submit"
-	"github.com/bjwbell/renroll/src/renroll"
 )
+
+type Configuration struct {
+	GmailAddress           string
+	GmailPassword          string
+	GoogleClientId         string
+	GoogleClientSecret     string
+	GooglePlusScopes       string
+	GPlusSigninCallback    string
+	GoogleAnalyticsId      string
+	FacebookScopes         string
+	FacebookAppId          string
+	FacebookSigninCallback string
+}
+
+func Config() Configuration {
+	file, _ := os.Open("conf.json")
+	decoder := json.NewDecoder(file)
+	configuration := Configuration{}
+	err := decoder.Decode(&configuration)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return configuration
+}
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	log.Print("indexhandler - start")
@@ -67,7 +98,7 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func unreleasedHandler(w http.ResponseWriter, r *http.Request) {
-	conf := struct{ Conf renroll.Configuration }{renroll.Config()}
+	conf := struct{ Conf Configuration }{Config()}
 	conf.Conf.GPlusSigninCallback = "gSettings"
 	conf.Conf.FacebookSigninCallback = "fbSettings"
 	t, _ := template.ParseFiles(
@@ -145,13 +176,50 @@ server {
 	}
 
 	// start Gophish container
-	out, err = exec.Command("docker", "run", "--net", "gophish", "--ip", ipAddr, "bjwbell/gophish-container", "/gophish/gophish").CombinedOutput()
+	ctx := context.Background()
+	cli, err := client.NewEnvClient()
 	if err != nil {
-		auth.LogError(fmt.Sprintf("ERROR STARTING GOPHISH CONTAINER, err: %v, stdout: %v", err, string(out)))
-		log.Fatal(err)
-	} else {
-		fmt.Println("STARTED GOPHISH CONTAINER")
+		panic(err)
 	}
+
+	imageName := "bjwbell/gophish-container"
+	out3, err3 := cli.ImagePull(ctx, imageName, types.ImagePullOptions{})
+	if err3 != nil {
+		panic(err3)
+	}
+	io.Copy(os.Stdout, out3)
+
+	// createConfig := types.ContainerCreateConfig{
+	// 	Name:             "",
+	// 	Config:           nil,  //*container.Config
+	// 	HostConfig:       nil,  // *container.HostConfig
+	// 	NetworkingConfig: nil,  // *network.NetworkingConfig
+	// 	AdjustCPUShares:  true, //bool
+	// }
+
+	var nsconfig map[string]*network.EndpointSettings
+	nsconfig["gophish"] = nil
+	networkConfig := network.NetworkingConfig{EndpointsConfig: nsconfig}
+	resp, err3 := cli.ContainerCreate(ctx, &container.Config{
+		Image: imageName,
+	}, nil, &networkConfig, "")
+	if err3 != nil {
+		panic(err3)
+	}
+
+	if err3 := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err3 != nil {
+		panic(err3)
+	}
+
+	fmt.Println(resp.ID)
+
+	// out, err = exec.Command("docker", "run", "--net", "gophish", "--ip", ipAddr, "bjwbell/gophish-container", "/gophish/gophish").CombinedOutput()
+	// if err != nil {
+	// 	auth.LogError(fmt.Sprintf("ERROR STARTING GOPHISH CONTAINER, err: %v, stdout: %v", err, string(out)))
+	// 	log.Fatal(err)
+	// } else {
+	// 	fmt.Println("STARTED GOPHISH CONTAINER")
+	// }
 
 	// Save details to database
 	if _, success := db.SaveSite(emailAddress, siteName, ipAddr); !success {
@@ -166,10 +234,10 @@ server {
 
 func createsiteHandler(w http.ResponseWriter, r *http.Request) {
 	conf := struct {
-		Conf     renroll.Configuration
+		Conf     Configuration
 		Email    string
 		SiteName string
-	}{renroll.Config(), "", ""}
+	}{Config(), "", ""}
 	conf.Conf.GPlusSigninCallback = "gSettings"
 	conf.Conf.FacebookSigninCallback = "fbSettings"
 	if err := r.ParseForm(); err != nil {
