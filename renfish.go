@@ -198,6 +198,7 @@ server {
 	// }
 
 	var nsconfig map[string]*network.EndpointSettings
+	nsconfig = make(map[string]*network.EndpointSettings)
 	nsconfig["gophish"] = nil
 	networkConfig := network.NetworkingConfig{EndpointsConfig: nsconfig}
 	resp, err3 := cli.ContainerCreate(ctx, &container.Config{
