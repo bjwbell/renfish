@@ -41,16 +41,16 @@
           </div>
           <script>
            $("#submitform").submit(function(e) {
+               window.setTimeout(siteredirect, 10000);
                $.ajax({
                    type: "POST",
                    url: "/createsite",
                    data: $("#submitform").serialize(), // serializes the form's elements.
                    success: function(data)
                    {
-                       window.setTimeout(siteredirect, 5000);
                    }
                });
-               e.preventDefault(); // avoid to execute the actual submit of the form.
+               e.preventDefault(); // avoid executing the actual submit of the form.
            });
 
            function siteredirect() {
