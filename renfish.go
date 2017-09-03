@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"html/template"
 	"io"
@@ -189,12 +190,27 @@ server {
 	}
 
 	// create certificate
-	out, err := exec.Command("certbot", "certonly", "-n", "-q", "--standalone", "--pre-hook", "service nginx stop", "--post-hook", "service nginx start", "-d", domain).CombinedOutput()
-	if err != nil {
-		auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
-		log.Fatal(err)
+	staging := ""
+	fmt.Println("flagStaging:", *flagStaging)
+	if *flagStaging {
+		staging = "--staging"
+		out, err := exec.Command("certbot", "certonly", "-n", "-q", "--standalone", "--agree-tos", "--email", "bjwbell@gmail.com", staging, "--pre-hook", "service nginx stop", "--post-hook", "service nginx start", "-d", domain).CombinedOutput()
+		if err != nil {
+			auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
+			log.Fatal(err)
+		} else {
+			fmt.Println("CREATED CERTBOT CERTIFICATE")
+		}
+
 	} else {
-		fmt.Println("CREATED CERTBOT CERTIFICATE")
+		out, err := exec.Command("certbot", "certonly", "-n", "-q", "--standalone", "--agree-tos", "--email", "bjwbell@gmail.com", "--pre-hook", "service nginx stop", "--post-hook", "service nginx start", "-d", domain).CombinedOutput()
+		if err != nil {
+			auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
+			log.Fatal(err)
+		} else {
+			fmt.Println("CREATED CERTBOT CERTIFICATE")
+		}
+
 	}
 
 	// Link nginx conf file to sites-enabled/
@@ -207,7 +223,7 @@ server {
 	}
 
 	// Reload nginx conf
-	out, err = exec.Command("nginx", "-s", "reload").CombinedOutput()
+	out, err := exec.Command("nginx", "-s", "reload").CombinedOutput()
 	if err != nil {
 		auth.LogError(fmt.Sprintf("ERROR RELOADING NGINX CONF, err: %v, stdout: %v", err, string(out)))
 		log.Fatal(err)
@@ -301,7 +317,11 @@ func redir(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+var flagStaging = flag.Bool("staging", false, "Pass --staging to certbot")
+
 func main() {
+	flag.Parse()
+	log.Println("Staging: ", *flagStaging)
 	http.HandleFunc("/about", aboutHandler)
 	http.HandleFunc("/auth/getemail", auth.GetGPlusEmailHandler)
 	http.HandleFunc("/createaccount", auth.CreateAccountHandler)
