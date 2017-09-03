@@ -139,7 +139,47 @@ server {
     }
 }
 `
-	ipAddr := getNextIP()
+	// START GOPHISH CONTAINER
+	fmt.Println("STARTING GOPHISH CONTAINER")
+	ctx := context.Background()
+	cli, err := client.NewEnvClient()
+	if err != nil {
+		panic(err)
+	}
+	imageName := "bjwbell/gophish-container"
+	out3, err3 := cli.ImagePull(ctx, imageName, types.ImagePullOptions{})
+	if err3 != nil {
+		panic(err3)
+	}
+	io.Copy(os.Stdout, out3)
+
+	var nsconfig map[string]*network.EndpointSettings
+	nsconfig = make(map[string]*network.EndpointSettings)
+	nsconfig["gophish"] = nil
+	networkConfig := network.NetworkingConfig{EndpointsConfig: nsconfig}
+	resp, err3 := cli.ContainerCreate(ctx, &container.Config{
+		Image: imageName,
+	}, nil, &networkConfig, "")
+	if err3 != nil {
+		panic(err3)
+	}
+
+	if err3 := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err3 != nil {
+		panic(err3)
+	}
+
+	fmt.Println("CONTAINERID:", resp.ID)
+
+	container, err := cli.ContainerInspect(ctx, resp.ID)
+	if err != nil {
+		panic(err)
+	}
+	endpoint := container.NetworkSettings.Networks["gophish"]
+	ipAddr := endpoint.IPAddress
+	fmt.Println("CONTAINER IP ADDRESS:", ipAddr)
+	fmt.Println("FINISHED STARTING CONTAINER")
+	// END START CONTAINER
+
 	nginxConf = strings.Replace(nginxConf, "<site-name>", domain, -1)
 	nginxConf = strings.Replace(nginxConf, "<ip-address>", ipAddr, -1)
 	fileName := "/etc/nginx/sites-available/" + siteName + "." + "renfish.com"
@@ -174,37 +214,6 @@ server {
 	} else {
 		fmt.Println("RELOADED NGINX CONF")
 	}
-
-	// start Gophish container
-	ctx := context.Background()
-	cli, err := client.NewEnvClient()
-	if err != nil {
-		panic(err)
-	}
-
-	imageName := "bjwbell/gophish-container"
-	out3, err3 := cli.ImagePull(ctx, imageName, types.ImagePullOptions{})
-	if err3 != nil {
-		panic(err3)
-	}
-	io.Copy(os.Stdout, out3)
-
-	var nsconfig map[string]*network.EndpointSettings
-	nsconfig = make(map[string]*network.EndpointSettings)
-	nsconfig["gophish"] = nil
-	networkConfig := network.NetworkingConfig{EndpointsConfig: nsconfig}
-	resp, err3 := cli.ContainerCreate(ctx, &container.Config{
-		Image: imageName,
-	}, nil, &networkConfig, "")
-	if err3 != nil {
-		panic(err3)
-	}
-
-	if err3 := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err3 != nil {
-		panic(err3)
-	}
-
-	fmt.Println(resp.ID)
 
 	// Save details to database
 	if _, success := db.SaveSite(emailAddress, siteName, ipAddr); !success {
