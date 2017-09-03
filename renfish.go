@@ -189,14 +189,6 @@ server {
 	}
 	io.Copy(os.Stdout, out3)
 
-	// createConfig := types.ContainerCreateConfig{
-	// 	Name:             "",
-	// 	Config:           nil,  //*container.Config
-	// 	HostConfig:       nil,  // *container.HostConfig
-	// 	NetworkingConfig: nil,  // *network.NetworkingConfig
-	// 	AdjustCPUShares:  true, //bool
-	// }
-
 	var nsconfig map[string]*network.EndpointSettings
 	nsconfig = make(map[string]*network.EndpointSettings)
 	nsconfig["gophish"] = nil
@@ -213,14 +205,6 @@ server {
 	}
 
 	fmt.Println(resp.ID)
-
-	// out, err = exec.Command("docker", "run", "--net", "gophish", "--ip", ipAddr, "bjwbell/gophish-container", "/gophish/gophish").CombinedOutput()
-	// if err != nil {
-	// 	auth.LogError(fmt.Sprintf("ERROR STARTING GOPHISH CONTAINER, err: %v, stdout: %v", err, string(out)))
-	// 	log.Fatal(err)
-	// } else {
-	// 	fmt.Println("STARTED GOPHISH CONTAINER")
-	// }
 
 	// Save details to database
 	if _, success := db.SaveSite(emailAddress, siteName, ipAddr); !success {
