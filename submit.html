@@ -43,9 +43,9 @@
           </div>
           <script>
            $("#submitform").submit(function(e) {
-               $(".preload").fadeIn(5000);
-               $("#submitform").fadeOut(5000);
-               window.setTimeout(siteredirect, 10000);
+               $(".preload").fadeIn(2000);
+               $("#submitform").fadeOut();
+               window.setTimeout(siteredirect, 15000);
                $.ajax({
                    type: "POST",
                    url: "/createsite",
