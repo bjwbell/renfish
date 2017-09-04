@@ -180,10 +180,12 @@ server {
 		Image: imageName,
 	}, nil, &networkConfig, "")
 	if err3 != nil {
+		log.Println("ERROR CREATING CONTAINER")
 		panic(err3)
 	}
 
 	if err3 := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err3 != nil {
+		log.Println("ERROR STARTING CONTAINER")
 		panic(err3)
 	}
 	containerID := resp.ID
