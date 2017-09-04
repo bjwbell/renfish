@@ -174,7 +174,7 @@ server {
 
 	var nsconfig map[string]*network.EndpointSettings
 	nsconfig = make(map[string]*network.EndpointSettings)
-	nsconfig["gophish"] = nil
+	nsconfig["gophish"] = &network.EndpointSettings{}
 	networkConfig := network.NetworkingConfig{EndpointsConfig: nsconfig}
 	resp, err3 := cli.ContainerCreate(ctx, &container.Config{
 		Image: imageName,
@@ -182,6 +182,8 @@ server {
 	if err3 != nil {
 		log.Println("ERROR CREATING CONTAINER")
 		panic(err3)
+	} else {
+		log.Println("CREATED CONTAINER")
 	}
 
 	if err3 := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err3 != nil {
