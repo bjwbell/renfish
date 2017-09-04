@@ -23,7 +23,6 @@ import (
 	"github.com/bjwbell/renfish/auth"
 	"github.com/bjwbell/renfish/conf"
 	"github.com/bjwbell/renfish/db"
-	"github.com/bjwbell/renfish/submit"
 )
 
 type Configuration struct {
@@ -52,11 +51,9 @@ func Config() Configuration {
 
 func logRequest(w http.ResponseWriter, r *http.Request) {
 	host, _, err := net.SplitHostPort(r.RemoteAddr)
-
 	if err != nil {
 		host = r.RemoteAddr
 	}
-
 	uri := r.RequestURI
 	url := *r.URL
 
@@ -327,6 +324,14 @@ func settingsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func submitHandler(w http.ResponseWriter, r *http.Request) {
+	t, _ := template.ParseFiles(
+		"submit.html",
+		"templates/header.html",
+		"templates/bottombar.html")
+	t.Execute(w, struct{ Conf conf.Configuration }{conf.Config()})
+}
+
 func redir(w http.ResponseWriter, req *http.Request) {
 	logRequest(w, req)
 	host := req.Host
@@ -356,7 +361,7 @@ func main() {
 	http.HandleFunc("/oauth2callback", auth.Oauth2callback)
 	http.HandleFunc("/settings", settingsHandler)
 	http.HandleFunc("/signinform", auth.SigninFormHandler)
-	http.HandleFunc("/submit", submit.SubmitHandler)
+	http.HandleFunc("/submit", submitHandler)
 	http.HandleFunc("/unreleased", unreleasedHandler)
 	http.HandleFunc("/createsite", createsiteHandler)
 
