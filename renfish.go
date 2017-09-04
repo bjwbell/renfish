@@ -325,6 +325,7 @@ func settingsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func submitHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(w, r)
 	t, _ := template.ParseFiles(
 		"submit.html",
 		"templates/header.html",
