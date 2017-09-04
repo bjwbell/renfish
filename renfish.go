@@ -8,6 +8,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/exec"
@@ -49,7 +50,30 @@ func Config() Configuration {
 	return configuration
 }
 
+func logRequest(w http.ResponseWriter, r *http.Request) {
+	host, _, err := net.SplitHostPort(r.RemoteAddr)
+
+	if err != nil {
+		host = r.RemoteAddr
+	}
+
+	uri := r.RequestURI
+	url := *r.URL
+
+	// Requests using the CONNECT method over HTTP/2.0 must use
+	// the authority field (aka r.Host) to identify the target.
+	// Refer: https://httpwg.github.io/specs/rfc7540.html#CONNECT
+	if r.ProtoMajor == 2 && r.Method == "CONNECT" {
+		uri = r.Host
+	}
+	if uri == "" {
+		uri = url.RequestURI()
+	}
+	log.Printf("%v - %v %v %v", host, r.Method, uri, r.Proto)
+}
+
 func indexHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(w, r)
 	log.Print("indexhandler - start")
 	index := struct{ Conf conf.Configuration }{conf.Config()}
 	t, e := template.ParseFiles("idx.html", "templates/header.html", "templates/topbar.html", "templates/bottombar.html")
@@ -63,6 +87,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func robotsHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(w, r)
 	log.Print("robothandler - start")
 	index := struct{ Conf conf.Configuration }{conf.Config()}
 	t, e := template.ParseFiles("robots.txt")
@@ -76,6 +101,7 @@ func robotsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func googleAdwordsVerifyHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(w, r)
 	log.Print("adwordsVerifyHandler - start")
 	index := struct{ Conf conf.Configuration }{conf.Config()}
 	t, e := template.ParseFiles("google41fd03a6c9348593.html")
@@ -89,6 +115,7 @@ func googleAdwordsVerifyHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(w, r)
 	about := struct{ Conf conf.Configuration }{conf.Config()}
 	t, _ := template.ParseFiles(
 		"about.html",
@@ -99,6 +126,7 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func unreleasedHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(w, r)
 	conf := struct{ Conf Configuration }{Config()}
 	conf.Conf.GPlusSigninCallback = "gSettings"
 	conf.Conf.FacebookSigninCallback = "fbSettings"
@@ -108,11 +136,6 @@ func unreleasedHandler(w http.ResponseWriter, r *http.Request) {
 		"templates/topbar.html",
 		"templates/bottombar.html")
 	t.Execute(w, conf)
-}
-
-func getNextIP() string {
-	ips := db.DbGetIPs(db.DbName)
-	return db.DbGetNextAvailableIP(ips)
 }
 
 func createSite(emailAddress, siteName string) {
@@ -243,6 +266,7 @@ server {
 }
 
 func createsiteHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(w, r)
 	conf := struct {
 		Conf     Configuration
 		Email    string
@@ -289,6 +313,7 @@ func createsiteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func settingsHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(w, r)
 	conf := struct{ Conf conf.Configuration }{conf.Config()}
 	conf.Conf.GPlusSigninCallback = "gSettings"
 	conf.Conf.FacebookSigninCallback = "fbSettings"
@@ -303,6 +328,7 @@ func settingsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func redir(w http.ResponseWriter, req *http.Request) {
+	logRequest(w, req)
 	host := req.Host
 	httpsPort := "443"
 	if strings.Index(host, ":8080") != -1 {
