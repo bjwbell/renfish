@@ -186,16 +186,15 @@ server {
 	if err3 := cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err3 != nil {
 		panic(err3)
 	}
-
-	fmt.Println("CONTAINERID:", resp.ID)
-
+	containerID := resp.ID
+	fmt.Println("CONTAINERID:", containerID)
 	container, err := cli.ContainerInspect(ctx, resp.ID)
 	if err != nil {
 		panic(err)
 	}
 	endpoint := container.NetworkSettings.Networks["gophish"]
 	ipAddr := endpoint.IPAddress
-	fmt.Println("CONTAINER IP ADDRESS:", ipAddr)
+	fmt.Println("CONTAINER IP:", ipAddr)
 	fmt.Println("FINISHED STARTING CONTAINER")
 	// END START CONTAINER
 
@@ -250,12 +249,12 @@ server {
 	}
 
 	// Save details to database
-	if _, success := db.SaveSite(emailAddress, siteName, ipAddr); !success {
-		auth.LogError(fmt.Sprintf("ERROR SAVING SITE TO DB email (%s), sitename (%s), ip (%s)",
-			emailAddress, siteName, ipAddr))
+	if _, success := db.SaveSite(emailAddress, siteName, containerID); !success {
+		auth.LogError(fmt.Sprintf("ERROR SAVING SITE TO DB email (%s), sitename (%s), containerID (%s)",
+			emailAddress, siteName, containerID))
 		log.Fatal(nil)
 	} else {
-		fmt.Println(fmt.Sprintf("SAVED SITE TO DB email (%s), sitename (%s), ip (%s)", emailAddress, siteName, ipAddr))
+		fmt.Println(fmt.Sprintf("SAVED SITE TO DB: email (%s), sitename (%s), containerID (%s)", emailAddress, siteName, containerID))
 	}
 	return
 }
