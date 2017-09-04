@@ -71,13 +71,11 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	logRequest(w, r)
-	log.Print("indexhandler - start")
 	index := struct{ Conf conf.Configuration }{conf.Config()}
 	t, e := template.ParseFiles("idx.html", "templates/header.html", "templates/topbar.html", "templates/bottombar.html")
 	if e != nil {
 		panic(e)
 	}
-	log.Print("indexhandler - execute")
 	if e = t.Execute(w, index); e != nil {
 		panic(e)
 	}
