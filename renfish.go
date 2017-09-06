@@ -158,6 +158,7 @@ server {
     }
 }
 `
+	auth.SendAdminEmail(conf.Config().GmailAddress, "Renfish Interested User Start", fmt.Sprintf("Details: email (%s), sitename (%s), containerID (%s)", emailAddress, siteName, "TBD"))
 	// START GOPHISH CONTAINER
 	fmt.Println("STARTING GOPHISH CONTAINER")
 	ctx := context.Background()
@@ -260,6 +261,7 @@ server {
 	} else {
 		fmt.Println(fmt.Sprintf("SAVED SITE TO DB: email (%s), sitename (%s), containerID (%s)", emailAddress, siteName, containerID))
 	}
+	auth.SendAdminEmail(conf.Config().GmailAddress, "Renfish Interested User End", fmt.Sprintf("SAVED SITE TO DB: email (%s), sitename (%s), containerID (%s)", emailAddress, siteName, containerID))
 	return
 }
 
