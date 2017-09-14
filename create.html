@@ -32,7 +32,9 @@
                       <label for="site">Site &nbsp;</label>
                   </div>
                   <div>
-                      <input type="text" name="sitename" id="sitename" size="8">.renfish.com<br/>
+                      <input type="text" name="sitename" id="sitename" size="8">.renfish.com
+                      <span id="warning"></span>
+                      <br/>
                   </div>
               </div>
               <br/>
@@ -43,6 +45,13 @@
           </div>
           <script>
            $("#submitform").submit(function(e) {
+               e.preventDefault(); // avoid executing the actual submit of the form.
+               var warn = document.getElementById("warning");
+               var siteName = document.getElementById("sitename").value;
+               if (siteName === "") {
+                   warn.innerHTML = "<font color='red'>enter a site name</font>"
+                   return;
+               }
                $(".preload").fadeIn(2000);
                $("#submitform").fadeOut();
                window.setTimeout(siteredirect, 15000);
@@ -54,7 +63,6 @@
                    {
                    }
                });
-               e.preventDefault(); // avoid executing the actual submit of the form.
            });
 
            function siteredirect() {
