@@ -1,16 +1,12 @@
 {{define "Topbar"}}
 <link rel="stylesheet" type="text/css" href="css/topbar.css" />
-<nav class="navbar navbar-fixed-top" role="navigation">
-    <div class="navbar-container">
-        <a href="/index" class="topbar-item">
+<div class="navbar" id="topnavbar" role="navigation">
+        <a href="/index">
             &nbsp;&nbsp;<img href="index" src="images/logo_inv_small.png" class="topbar-item">&nbsp;Renfish
         </a>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="/index#features" class="topbar-item">Features</a>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="/index#pricing" class="topbar-item">Pricing</a>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="/about" class="topbar-item">About</a>
-    </div>
-</nav>
+        <a href="/index#features">Features</a>
+        <a href="/index#pricing">Pricing</a>
+        <a href="/about">About</a>
+        <a href="javascript:void(0);" style="font-size:x-large;" class="icon" onclick="mobileNavbar()">&#9776;</a>
+</div>
 {{end}}
