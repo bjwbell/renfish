@@ -327,10 +327,10 @@ func settingsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func createHandler(w http.ResponseWriter, r *http.Request) {
+func newHandler(w http.ResponseWriter, r *http.Request) {
 	logRequest(w, r)
 	t, _ := template.ParseFiles(
-		"create.html",
+		"new.html",
 		"templates/header.html",
 		"templates/bottombar.html")
 	t.Execute(w, struct{ Conf conf.Configuration }{conf.Config()})
@@ -365,8 +365,9 @@ func main() {
 	http.HandleFunc("/oauth2callback", auth.Oauth2callback)
 	http.HandleFunc("/settings", settingsHandler)
 	http.HandleFunc("/signinform", auth.SigninFormHandler)
-	http.HandleFunc("/submit", createHandler)
-	http.HandleFunc("/create", createHandler)
+	http.HandleFunc("/submit", newHandler)
+	http.HandleFunc("/create", newHandler)
+	http.HandleFunc("/new", newHandler)
 	http.HandleFunc("/unreleased", unreleasedHandler)
 	http.HandleFunc("/createsite", createsiteHandler)
 
