@@ -9,20 +9,6 @@ a.topbar-item:hover{
     text-decoration: underline;
 }
 
-#topbarsigninButton {
-    position: relative;
-    float: right;
-}
-
-#topbarsignoutButton {
-    position: relative;
-    float: right;
-}
-
-#settings {
-    float: right;
-}
-
 .topbar-item {
     padding: 4px;
     border-radius: 7px;
