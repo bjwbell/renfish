@@ -1,21 +1,18 @@
+<!DOCTYPE html>
 <html>
   <head>
     <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta content="utf-8" http-equiv="encoding">
-    <title>Renfish - Sign Up</title>
+    <title>New - Renfish</title>
     {{template "Header" .}}
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/topbar.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   </head>
   <body>
-      <link rel="stylesheet" type="text/css" href="css/topbar.css" />
-      <nav class="navbar navbar-fixed-top" role="navigation">
-          <div class="navbar-container">
-              &nbsp;&nbsp;<a href="index" class="topbar-item">Renfish</a>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <a href="/pricing" class="topbar-item">Pricing</a>
-          </div>
-      </nav>
+      {{template "Topbar" .}}
       <div class="body-content">
           <div class="preload" style="display:none;"><img src="https://i.imgur.com/KUJoe.gif">
           </div>
@@ -38,7 +35,7 @@
                   </div>
               </div>
               <br/>
-              <div><input type="submit" value="Create Account"></div>
+              <div><input type="submit" value="New Account"></div>
               </div>
           </form>
           <br>

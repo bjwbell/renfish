@@ -332,6 +332,7 @@ func newHandler(w http.ResponseWriter, r *http.Request) {
 	t, _ := template.ParseFiles(
 		"new.html",
 		"templates/header.html",
+		"templates/topbar.html",
 		"templates/bottombar.html")
 	t.Execute(w, struct{ Conf conf.Configuration }{conf.Config()})
 }
