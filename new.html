@@ -36,15 +36,14 @@
               </div>
               <br/>
               <div>
-                  <a href="#" onclick="$(this).closest('form').submit()" style="padding:10px;background-color:Coral; border-radius: 3px; box-shadow: 1px 1px 1px #888888; font-size:medium;color: #000000;">Create Account</a>
+                  <a href="#" onclick="createSite();" style="padding:10px;background-color:Coral; border-radius: 3px; box-shadow: 1px 1px 1px #888888; font-size:medium;color: #000000;">Create Account</a>
               </div>
               </div>
           </form>
           <br>
           </div>
           <script>
-           $("#submitform").submit(function(e) {
-               e.preventDefault(); // avoid executing the actual submit of the form.
+           function createSite() {
                var warn = document.getElementById("warning");
                var siteName = document.getElementById("sitename").value;
                if (siteName === "") {
@@ -62,8 +61,7 @@
                    {
                    }
                });
-           });
-
+           }
            function siteredirect() {
                var subdomain = document.getElementById("sitename").value;
                window.location.href = 'https://'+subdomain+'.renfish.com';
