@@ -66,7 +66,7 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 	if uri == "" {
 		uri = url.RequestURI()
 	}
-	log.Printf("%v - %v %v %v", host, r.Method, uri, r.Proto)
+	log.Printf("%v - %v %v %v %v", host, r.Method, uri, r.Proto, r.UserAgent())
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
