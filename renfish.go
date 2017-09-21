@@ -286,7 +286,7 @@ func createsiteHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	email := r.Form.Get("email")
-	siteName := r.Form.Get("sitename")
+	siteName := strings.ToLower(r.Form.Get("sitename"))
 	conf.Email = email
 	conf.SiteName = "https://" + siteName + "." + r.Host
 	if email == "" || siteName == "" {
