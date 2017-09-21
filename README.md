@@ -27,5 +27,5 @@ docker pull bjwbell/gophish-container
 
 ```
 docker network create --subnet=172.19.0.0/16 gophish
-docker run --net gophish --ip 172.19.0.2 bjwbell/gophish-container /gophish/gophish
+docker run --net gophish bjwbell/gophish-container /gophish/gophish
 ```
