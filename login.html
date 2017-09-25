@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>Login - Renfish</title>
+    {{template "Header" .}}
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/topbar.css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  </head>
+  <body>
+      {{template "Topbar" .}}
+      <div class="body-content">
+          <br>
+          <form id="submitform" name="submitform" onsubmit="return gotoSite();">
+              <div class="gridbox-content" style="display:flex; flex-flow:wrap; width:100%; margin:0 auto;">
+                  <div>
+                      <label for="site">Site &nbsp;</label>
+                  </div>
+                  <div>
+                      <input type="text" name="sitename" id="sitename" size="8">.renfish.com
+                      <span id="warning"></span>
+                      <br/>
+                  </div>
+              </div>
+              <br/>
+              <div>
+                  <a href="#" onclick="gotoSite();" style="padding:10px;background-color:Coral; border-radius: 3px; box-shadow: 1px 1px 1px #888888; font-size:medium;color: #000000;">Go</a>
+              </div>
+              </div>
+          </form>
+          <br>
+          </div>
+          <script>
+           function gotoSite() {
+               var warn = document.getElementById("warning");
+               var siteName = document.getElementById("sitename").value;
+               if (siteName === "") {
+                   warn.innerHTML = "<font color='red'>enter a site name</font>"
+                   return false;
+               }
+               var subdomain = document.getElementById("sitename").value;
+               window.location.href = 'https://'+subdomain+'.renfish.com';
+               return false;
+           }
+          </script>
+      {{template "Bottombar"}}
+  </body>
+</html>

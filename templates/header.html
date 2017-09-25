@@ -18,13 +18,16 @@
 <script src="js/auth.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script>
-function mobileNavbar() {
-    var x = document.getElementById("topnavbar");
-    if (x.className === "navbar") {
-        x.className += " responsive";
-    } else {
-        x.className = "navbar";
-    }
-}
+ function mobileNavbar() {
+     var x = document.getElementById("topnavbar");
+     var login = document.getElementById("loginlink");
+     if (x.className === "navbar") {
+         x.className += " responsive";
+         login.style.float = "left";
+     } else {
+         x.className = "navbar";
+         login.style.float = "right";
+     }
+ }
 </script>
 {{end}}

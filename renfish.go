@@ -337,6 +337,16 @@ func newHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, struct{ Conf conf.Configuration }{conf.Config()})
 }
 
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(w, r)
+	t, _ := template.ParseFiles(
+		"login.html",
+		"templates/header.html",
+		"templates/topbar.html",
+		"templates/bottombar.html")
+	t.Execute(w, struct{ Conf conf.Configuration }{conf.Config()})
+}
+
 func redir(w http.ResponseWriter, req *http.Request) {
 	logRequest(w, req)
 	host := req.Host
@@ -369,6 +379,7 @@ func main() {
 	http.HandleFunc("/submit", newHandler)
 	http.HandleFunc("/create", newHandler)
 	http.HandleFunc("/new", newHandler)
+	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/unreleased", unreleasedHandler)
 	http.HandleFunc("/createsite", createsiteHandler)
 
