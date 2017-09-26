@@ -57,17 +57,33 @@
                    warn.innerHTML = "<font color='red'>enter a site name</font>"
                    return;
                }
-               $(".preload").fadeIn(2000);
-               $("#submitform").fadeOut();
-               window.setTimeout(siteredirect, 15000);
-               $.ajax({
-                   type: "POST",
-                   url: "/createsite",
-                   data: $("#submitform").serialize(), // serializes the form's elements.
-                   success: function(data)
-                   {
-                   }
-               });
+                              $.ajax({
+                   url: "/checksite" + "?sitename=" + siteName,
+                   async: true,
+                   method: "GET",
+                   data: "{}",
+                   dataType: "json",
+                   contentType: "application/json"
+               })
+                .always(function (jqXHR) {
+                    console.log(jqXHR.status);
+                    if (jqXHR.status == 200) {
+                        warn.innerHTML = "<font color='red'><b>account is taken (<a href=\"/login\">login</a>)</b></font>";
+                    } else {
+                        $(".preload").fadeIn(2000);
+                        $("#submitform").fadeOut();
+                        window.setTimeout(siteredirect, 15000);
+                        $.ajax({
+                            type: "POST",
+                            url: "/createsite",
+                            data: $("#submitform").serialize(), // serializes the form's elements.
+                            success: function(data)
+                            {
+                            }
+                        });
+                    }
+                });
+
            }
            function siteredirect() {
                var subdomain = document.getElementById("sitename").value;
