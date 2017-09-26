@@ -42,8 +42,22 @@
                    warn.innerHTML = "<font color='red'>enter a site name</font>"
                    return false;
                }
-               var subdomain = document.getElementById("sitename").value;
-               window.location.href = 'https://'+subdomain+'.renfish.com';
+               $.ajax({
+                   url: "/checksite" + "?sitename=" + siteName,
+                   async: true,
+                   method: "GET",
+                   data: "{}",
+                   dataType: "json",
+                   contentType: "application/json"
+               })
+                .always(function (jqXHR) {
+                    console.log(jqXHR.status);
+                    if (jqXHR.status == 200) {
+                        window.location.href = 'https://'+siteName+'.renfish.com';
+                    } else {
+                        warn.innerHTML = "<font color='red'>" + siteName + " is not registered</font>";
+                    }
+                });
                return false;
            }
           </script>

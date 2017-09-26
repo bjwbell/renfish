@@ -312,6 +312,38 @@ func createsiteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func checksiteHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(w, r)
+	conf := struct {
+		Conf     Configuration
+		Email    string
+		SiteName string
+	}{Config(), "", ""}
+	conf.Conf.GPlusSigninCallback = "gSettings"
+	conf.Conf.FacebookSigninCallback = "fbSettings"
+	siteName := r.FormValue("sitename")
+	siteNames := db.DbGetSiteNames()
+	for _, name := range siteNames {
+		if name == siteName {
+			JSONResponse(w, "", http.StatusOK)
+		}
+	}
+	JSONResponse(w, "", http.StatusNotFound)
+}
+
+// JSONResponse attempts to set the status code, c, and marshal the given interface, d, into a response that
+// is written to the given ResponseWriter.
+func JSONResponse(w http.ResponseWriter, d interface{}, c int) {
+	dj, err := json.MarshalIndent(d, "", "  ")
+	if err != nil {
+		http.Error(w, "Error creating JSON response", http.StatusInternalServerError)
+		//Logger.Println(err)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(c)
+	fmt.Fprintf(w, "%s", dj)
+}
+
 func settingsHandler(w http.ResponseWriter, r *http.Request) {
 	logRequest(w, r)
 	conf := struct{ Conf conf.Configuration }{conf.Config()}
@@ -382,6 +414,7 @@ func main() {
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/unreleased", unreleasedHandler)
 	http.HandleFunc("/createsite", createsiteHandler)
+	http.HandleFunc("/checksite", checksiteHandler)
 
 	http.HandleFunc("/index.html", indexHandler)
 	http.HandleFunc("/robots.txt", robotsHandler)

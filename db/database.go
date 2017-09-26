@@ -66,6 +66,35 @@ func SaveSite(userEmail, siteName, ip string) (int64, bool) {
 	return DbInsert(DbName, userEmail, userName, siteName, ip)
 }
 
+func DbGetSiteNames() []string {
+	siteNames := []string{}
+	if !Exists(DbName) {
+		return []string{}
+	}
+	db, err := sql.Open("sqlite3", "./"+DbName+".sqlite")
+	if err != nil {
+		auth.LogError("Couldn't open database (" + DbName + ")")
+		log.Fatal(err)
+		return siteNames
+	}
+	defer db.Close()
+	rows, err := db.Query(`select
+                               id,
+                               subdomain from users`)
+	if err != nil {
+		auth.LogError("Couldn't query database (" + DbName + ")")
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id int
+		var siteName string
+		rows.Scan(&id, &siteName)
+		siteNames = append(siteNames, siteName)
+	}
+	return siteNames
+}
+
 func DbInsert(dbName, userEmail, name, subdomain, containerId string) (int64, bool) {
 
 	if !Exists(dbName) {
