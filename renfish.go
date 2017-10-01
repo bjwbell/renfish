@@ -169,7 +169,9 @@ server {
 	imageName := "bjwbell/gophish-container"
 	out3, err3 := cli.ImagePull(ctx, imageName, types.ImagePullOptions{})
 	if err3 != nil {
-		panic(err3)
+		log.Println("ERROR PULLING IMAGE CONTAINER:")
+		log.Println(err3)
+		auth.LogError(fmt.Sprintf("ERROR PULLING IMAGE CONTAINER, sitename: %v, err: %v", siteName, err3))
 	}
 	io.Copy(os.Stdout, out3)
 
