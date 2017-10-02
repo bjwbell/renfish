@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -36,6 +37,8 @@ type Configuration struct {
 	FacebookScopes         string
 	FacebookAppId          string
 	FacebookSigninCallback string
+	DockerHubUserId        string
+	DockerHubPassword      string
 }
 
 func Config() Configuration {
@@ -167,7 +170,18 @@ server {
 		panic(err)
 	}
 	imageName := "bjwbell/gophish-container"
-	out3, err3 := cli.ImagePull(ctx, imageName, types.ImagePullOptions{})
+	pullOptions := types.ImagePullOptions{}
+	conf := Config()
+	if conf.DockerHubUserId != "" {
+		auth := types.AuthConfig{
+			Username: conf.DockerHubUserId,
+			Password: conf.DockerHubPassword,
+		}
+		authBytes, _ := json.Marshal(auth)
+		authBase64 := base64.URLEncoding.EncodeToString(authBytes)
+		pullOptions.RegistryAuth = authBase64
+	}
+	out3, err3 := cli.ImagePull(ctx, imageName, pullOptions)
 	if err3 != nil {
 		log.Println("ERROR PULLING IMAGE CONTAINER:")
 		log.Println(err3)
@@ -263,7 +277,7 @@ server {
 	} else {
 		fmt.Println(fmt.Sprintf("SAVED SITE TO DB: email (%s), sitename (%s), containerID (%s)", emailAddress, siteName, containerID))
 	}
-	auth.SendAdminEmail(conf.Config().GmailAddress, "Renfish Interested User End", fmt.Sprintf("SAVED SITE TO DB: email (%s), sitename (%s), containerID (%s)", emailAddress, siteName, containerID))
+	auth.SendAdminEmail(Config().GmailAddress, "Renfish Interested User End", fmt.Sprintf("SAVED SITE TO DB: email (%s), sitename (%s), containerID (%s)", emailAddress, siteName, containerID))
 	return
 }
 

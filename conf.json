@@ -6,5 +6,7 @@
     "GoogleClientId": "GOOGLE-CLIENTID",
     "GoogleClientSecret": "GOOGLE-CLIENTSECRET",
     "GoogleAnalyticsId": "GOOGLE-ANALYTICS-ID",
-    "FacebookAppId": "FACEBOOK-APPID"
+    "FacebookAppId": "FACEBOOK-APPID",
+    "DockerHubUserId": "DOCKERHUB-USERID",
+    "DockerHubPassword": "DOCKERHUB-PASSWORD"
 }
