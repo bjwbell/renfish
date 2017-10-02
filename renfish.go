@@ -22,7 +22,6 @@ import (
 	"golang.org/x/net/context"
 
 	"github.com/bjwbell/renfish/auth"
-	"github.com/bjwbell/renfish/conf"
 	"github.com/bjwbell/renfish/db"
 )
 
@@ -74,7 +73,7 @@ func logRequest(w http.ResponseWriter, r *http.Request) {
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	logRequest(w, r)
-	index := struct{ Conf conf.Configuration }{conf.Config()}
+	index := struct{ Conf Configuration }{Config()}
 	t, e := template.ParseFiles("idx.html", "templates/header.html", "templates/topbar.html", "templates/bottombar.html")
 	if e != nil {
 		panic(e)
@@ -87,7 +86,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 func robotsHandler(w http.ResponseWriter, r *http.Request) {
 	logRequest(w, r)
 	log.Print("robothandler - start")
-	index := struct{ Conf conf.Configuration }{conf.Config()}
+	index := struct{ Conf Configuration }{Config()}
 	t, e := template.ParseFiles("robots.txt")
 	if e != nil {
 		panic(e)
@@ -101,7 +100,7 @@ func robotsHandler(w http.ResponseWriter, r *http.Request) {
 func googleAdwordsVerifyHandler(w http.ResponseWriter, r *http.Request) {
 	logRequest(w, r)
 	log.Print("adwordsVerifyHandler - start")
-	index := struct{ Conf conf.Configuration }{conf.Config()}
+	index := struct{ Conf Configuration }{Config()}
 	t, e := template.ParseFiles("google41fd03a6c9348593.html")
 	if e != nil {
 		panic(e)
@@ -114,7 +113,7 @@ func googleAdwordsVerifyHandler(w http.ResponseWriter, r *http.Request) {
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	logRequest(w, r)
-	about := struct{ Conf conf.Configuration }{conf.Config()}
+	about := struct{ Conf Configuration }{Config()}
 	t, _ := template.ParseFiles(
 		"about.html",
 		"templates/header.html",
@@ -161,7 +160,7 @@ server {
     }
 }
 `
-	auth.SendAdminEmail(conf.Config().GmailAddress, "Renfish Interested User Start", fmt.Sprintf("Details: email (%s), sitename (%s), containerID (%s)", emailAddress, siteName, "TBD"))
+	auth.SendAdminEmail(Config().GmailAddress, "Renfish Interested User Start", fmt.Sprintf("Details: email (%s), sitename (%s), containerID (%s)", emailAddress, siteName, "TBD"))
 	// START GOPHISH CONTAINER
 	fmt.Println("STARTING GOPHISH CONTAINER")
 	ctx := context.Background()
@@ -362,7 +361,7 @@ func JSONResponse(w http.ResponseWriter, d interface{}, c int) {
 
 func settingsHandler(w http.ResponseWriter, r *http.Request) {
 	logRequest(w, r)
-	conf := struct{ Conf conf.Configuration }{conf.Config()}
+	conf := struct{ Conf Configuration }{Config()}
 	conf.Conf.GPlusSigninCallback = "gSettings"
 	conf.Conf.FacebookSigninCallback = "fbSettings"
 	t, _ := template.ParseFiles(
@@ -382,7 +381,7 @@ func newHandler(w http.ResponseWriter, r *http.Request) {
 		"templates/header.html",
 		"templates/topbar.html",
 		"templates/bottombar.html")
-	t.Execute(w, struct{ Conf conf.Configuration }{conf.Config()})
+	t.Execute(w, struct{ Conf Configuration }{Config()})
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
@@ -392,7 +391,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		"templates/header.html",
 		"templates/topbar.html",
 		"templates/bottombar.html")
-	t.Execute(w, struct{ Conf conf.Configuration }{conf.Config()})
+	t.Execute(w, struct{ Conf Configuration }{Config()})
 }
 
 func redir(w http.ResponseWriter, req *http.Request) {
