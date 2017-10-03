@@ -6,12 +6,12 @@ div#bottombar
     background-color:#495F72;
     border-radius: 7px;
     a:link, a:visited {
-        color: #000000;
+        color: white;
     }
 }
 
 a.bottombar:link, a.bottombar:visited {
-    color: #000000;
+    color: white;
     font-size: x-large;
     text-decoration: none;
 }
