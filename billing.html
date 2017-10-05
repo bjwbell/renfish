@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <title>Billing - Renfish</title>
+    {{template "Header" .}}
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400,300,600,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/topbar.css" />
+    <style type="text/css">
+     .billing-table {
+         border: 1px dashed black;
+         border-radius:5px;
+         padding:10px;
+     }
+     .billing-td {
+         padding:5px;
+     }
+    </style>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  </head>
+  <body>
+      {{template "Topbar" .}}
+      <div class="body-content">
+          <div class="preload" style="display:none;">
+              <center>
+                  <h3>You'll be emailed an invoice shortly</h3>
+                  <b>Thank You</b>
+              </center>
+          </div>
+          <br>
+          <span id="warning"></span>
+          <form id="submitform" name="submitform" onsubmit="return submitBilling();">
+              <table border="0" class="billing-table">
+                  <tr><td class="billing-td"><b>Site</b></td><td class="billing-td"><input type="text" name="sitename" id="sitename" size="15">.renfish.com &nbsp;<span id="warning-sitename"></span></td></tr>
+                  <tr><td class="billing-td"><b>Email</b></td><td class="billing-td"><input type="text" name="email" id="email" size="15">&nbsp;<span id="warning-email"></span></td></tr>
+              </table>
+              <br/>
+              <div>
+                  <a href="#" onclick="return submitBilling();" style="padding:10px;background-color:Coral; border-radius: 3px; box-shadow: 1px 1px 1px #888888; font-size:medium;color: #000000;">Go</a>
+              </div>
+          </form>
+          <br>
+      </div>
+      <script>
+       function submitBilling() {
+           var warnSiteName = document.getElementById("warning-sitename");
+           var warnEmail = document.getElementById("warning-email");
+           var warn = document.getElementById("warning");
+           var siteName = document.getElementById("sitename").value;
+           var email = document.getElementById("email").value;
+           warnSiteName.innerHTML = "";
+           warnEmail.innerHTML = "";
+           if (siteName === "") {
+               warnSiteName.innerHTML = "<font color='red'>enter a site name</font>"
+               return false;
+           }
+           if (email === "") {
+               warnEmail.innerHTML = "<font color='red'>enter an email address</font>"
+               return false;
+           }
+           $.ajax({
+               url: "/createinvoice" + "?sitename=" + encodeURI(siteName) + "&email=" + encodeURI(email),
+               async: true,
+               method: "PUT",
+               data: "{}",
+               dataType: "json",
+               contentType: "application/json"
+           })
+            .always(function (jqXHR) {
+                warn.innerHTML = "<h2><font color='red'>" + "An invoice will be emailed to " + email + " shortly" + "</font></h2>";
+            });
+           return false;
+           
+       }
+      </script>
+      {{template "Bottombar"}}
+  </body>
+</html>

@@ -369,6 +369,42 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, struct{ Conf conf.Configuration }{conf.Config()})
 }
 
+func createInvoiceHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(w, r)
+	if r.Method != "PUT" {
+		JSONResponse(w, "", http.StatusMethodNotAllowed)
+		return
+	}
+	siteName := r.FormValue("sitename")
+	siteNames := db.DbGetSiteNames()
+	email := r.FormValue("email")
+	validSite := false
+	for _, name := range siteNames {
+		if name == siteName {
+			validSite = true
+			break
+		}
+	}
+	auth.SendAdminEmail(conf.Config().GmailAddress,
+		"Renfish Create Billing", fmt.Sprintf("email (%s), sitename (%s)", email, siteName))
+	if !validSite {
+		JSONResponse(w, "", http.StatusNotFound)
+		return
+	}
+	JSONResponse(w, "", http.StatusOK)
+	return
+}
+
+func billingHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(w, r)
+	t, _ := template.ParseFiles(
+		"billing.html",
+		"templates/header.html",
+		"templates/topbar.html",
+		"templates/bottombar.html")
+	t.Execute(w, struct{ Conf conf.Configuration }{conf.Config()})
+}
+
 func redir(w http.ResponseWriter, req *http.Request) {
 	logRequest(w, req)
 	host := req.Host
@@ -402,6 +438,8 @@ func main() {
 	http.HandleFunc("/create", newHandler)
 	http.HandleFunc("/new", newHandler)
 	http.HandleFunc("/login", loginHandler)
+	http.HandleFunc("/billing", billingHandler)
+	http.HandleFunc("/createinvoice", createInvoiceHandler)
 	http.HandleFunc("/unreleased", unreleasedHandler)
 	http.HandleFunc("/createsite", createsiteHandler)
 	http.HandleFunc("/checksite", checksiteHandler)

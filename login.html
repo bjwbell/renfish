@@ -10,28 +10,61 @@
     <link rel="stylesheet" href="font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/topbar.css" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+    <style type="text/css">
+     .container {
+        display:flex;
+        flex-wrap:wrap;
+        flex-direction:row;
+        margin:10px;
+}
+
+.left {order:1;; flex-basis:100%;border: 1px dashed black; margin:2px; padding:10px;}
+.right {order:2;;flex-basis:100%; padding:20px;border: 1px dashed black;margin:2px;}
+
+@media screen and (min-width:600px) {
+   .container {
+       flex-wrap:nowrap;
+   }
+
+    .left {
+        flex-basis:200px;
+        order:1;
+    }
+    .right {
+        flex-basis:200px;
+        order:2;
+    }
+}
+    </style>
   </head>
   <body>
       {{template "Topbar" .}}
       <div class="body-content">
           <br>
-          <form id="submitform" name="submitform" onsubmit="return gotoSite();">
-              <div class="gridbox-content" style="display:flex; flex-flow:wrap; width:100%; margin:0 auto;">
-                  <div>
-                      <label for="site">Site &nbsp;</label>
-                  </div>
-                  <div>
-                      <input type="text" name="sitename" id="sitename" size="8">.renfish.com
-                      <span id="warning"></span>
+          <div class="container">
+              <div class="left">
+                  <form id="submitform" name="submitform" onsubmit="return gotoSite();">
+                      <div class="gridbox-content" style="display:flex; flex-flow:wrap; width:100%; margin:0 auto;">
+                          <div>
+                              <label for="site">Site &nbsp;</label>
+                          </div>
+                          <div>
+                              <input type="text" name="sitename" id="sitename" size="8">.renfish.com
+                              <span id="warning"></span>
+                              <br/>
+                          </div>
+                      </div>
                       <br/>
-                  </div>
+                      <div>
+                          <a href="#" onclick="gotoSite();" style="padding:10px;background-color:Coral; border-radius: 3px; box-shadow: 1px 1px 1px #888888; font-size:medium;color: #000000;">Go</a>
+                      </div>
+          	  </form>
               </div>
-              <br/>
-              <div>
-                  <a href="#" onclick="gotoSite();" style="padding:10px;background-color:Coral; border-radius: 3px; box-shadow: 1px 1px 1px #888888; font-size:medium;color: #000000;">Go</a>
+              <div class="right">
+                  <b>Account</b><br/><br/>
+                  <a href="/billing" style="padding:10px;background-color:Coral; border-radius: 3px; box-shadow: 1px 1px 1px #888888; font-size:medium;color: #000000;">Billing</a>
               </div>
-              </div>
-          </form>
+          </div>
           <br>
           </div>
           <script>
