@@ -132,11 +132,15 @@ func createSite(emailAddress, siteName string) {
     }
 }
 server {
-    listen              80;
+    listen              80 ssl;
     server_name  <site-name>;
+    ssl_certificate     /etc/letsencrypt/live/<site-name>/cert.pem;
+    ssl_certificate_key /etc/letsencrypt/live/<site-name>/privkey.pem;
+    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
     location / {
             proxy_pass http://<ip-address>;
-             proxy_set_header Host $host;
+            proxy_set_header Host $host;
     }
 }
 `
