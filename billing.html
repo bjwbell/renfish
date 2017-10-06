@@ -40,7 +40,7 @@
               </table>
               <br/>
               <div>
-                  <a href="#" onclick="return submitBilling();" style="padding:10px;background-color:Coral; border-radius: 3px; box-shadow: 1px 1px 1px #888888; font-size:medium;color: #000000;">Go</a>
+                  <a href="#" onclick="return submitBilling();" style="padding:10px;background-color:Coral; border-radius: 3px; box-shadow: 1px 1px 1px #888888; font-size:medium;color: #000000;">Pay with PayPal</a>
               </div>
           </form>
           <br>
@@ -71,7 +71,7 @@
                contentType: "application/json"
            })
             .always(function (jqXHR) {
-                warn.innerHTML = "<h2><font color='red'>" + "An invoice will be emailed to " + email + " shortly" + "</font></h2>";
+                warn.innerHTML = "<h2><font color='red'>" + "A PayPal invoice will be sent to " + email + ", shortly" + "</font></h2>";
             });
            return false;
            
