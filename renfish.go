@@ -72,6 +72,11 @@ func robotsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func faviconHandler(w http.ResponseWriter, r *http.Request) {
+	logRequest(w, r)
+	http.ServeFile(w, r, "favicon.ico")
+}
+
 func googleAdwordsVerifyHandler(w http.ResponseWriter, r *http.Request) {
 	logRequest(w, r)
 	log.Print("adwordsVerifyHandler - start")
@@ -446,6 +451,7 @@ func main() {
 
 	http.HandleFunc("/index.html", indexHandler)
 	http.HandleFunc("/robots.txt", robotsHandler)
+	http.HandleFunc("/favicon.ico", faviconHandler)
 	http.HandleFunc("/google41fd03a6c9348593.html", googleAdwordsVerifyHandler)
 
 	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("./css"))))
