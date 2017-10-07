@@ -133,6 +133,17 @@ func createSite(emailAddress, siteName string) {
     }
 }
 server {
+       listen         80;
+       server_name    <site-name>;
+       return         301 https://$server_name$request_uri;
+}
+
+server {
+       listen         80;
+       server_name    <phishing-site>;
+       return         301 https://$server_name$request_uri;
+}
+server {
     listen              443 ssl;
     server_name  <phishing-site>;
     ssl_certificate     /etc/letsencrypt/live/<phishing-site>/cert.pem;
