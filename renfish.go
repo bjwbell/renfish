@@ -117,6 +117,7 @@ func unreleasedHandler(w http.ResponseWriter, r *http.Request) {
 
 func createSite(emailAddress, siteName string) {
 	domain := siteName + "." + "renfish.com"
+	phishingSite := siteName + "." + "security-notification.com"
 	// Add nginx conf file
 	nginxConf := `server {
      listen 443 ssl;
@@ -132,10 +133,10 @@ func createSite(emailAddress, siteName string) {
     }
 }
 server {
-    listen              80 ssl;
-    server_name  <site-name>;
-    ssl_certificate     /etc/letsencrypt/live/<site-name>/cert.pem;
-    ssl_certificate_key /etc/letsencrypt/live/<site-name>/privkey.pem;
+    listen              443 ssl;
+    server_name  <phishing-site>;
+    ssl_certificate     /etc/letsencrypt/live/<phishing-site>/cert.pem;
+    ssl_certificate_key /etc/letsencrypt/live/<phishing-site>/privkey.pem;
     ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
     ssl_ciphers         HIGH:!aNULL:!MD5;
     location / {
@@ -203,6 +204,7 @@ server {
 	// END START CONTAINER
 
 	nginxConf = strings.Replace(nginxConf, "<site-name>", domain, -1)
+	nginxConf = strings.Replace(nginxConf, "<phishing-site>", phishingSite, -1)
 	nginxConf = strings.Replace(nginxConf, "<ip-address>", ipAddr, -1)
 	fileName := "/etc/nginx/sites-available/" + siteName + "." + "renfish.com"
 	if err := ioutil.WriteFile(fileName, []byte(nginxConf), 0644); err != nil {
@@ -223,8 +225,24 @@ server {
 			fmt.Println("CREATED CERTBOT CERTIFICATE")
 		}
 
+		out, err = exec.Command("certbot", "certonly", "-n", "-q", "--standalone", "--agree-tos", "--email", "bjwbell@gmail.com", staging, "--pre-hook", "service nginx stop", "--post-hook", "service nginx start", "-d", phishingSite).CombinedOutput()
+		if err != nil {
+			auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
+			log.Fatal(err)
+		} else {
+			fmt.Println("CREATED CERTBOT CERTIFICATE")
+		}
+
 	} else {
 		out, err := exec.Command("certbot", "certonly", "-n", "-q", "--standalone", "--agree-tos", "--email", "bjwbell@gmail.com", "--pre-hook", "service nginx stop", "--post-hook", "service nginx start", "-d", domain).CombinedOutput()
+		if err != nil {
+			auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
+			log.Fatal(err)
+		} else {
+			fmt.Println("CREATED CERTBOT CERTIFICATE")
+		}
+
+		out, err = exec.Command("certbot", "certonly", "-n", "-q", "--standalone", "--agree-tos", "--email", "bjwbell@gmail.com", "--pre-hook", "service nginx stop", "--post-hook", "service nginx start", "-d", phishingSite).CombinedOutput()
 		if err != nil {
 			auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
 			log.Fatal(err)
