@@ -231,7 +231,7 @@ server {
 		out, err := exec.Command("certbot", "certonly", "-n", "-q", "--standalone", "--agree-tos", "--email", "bjwbell@gmail.com", staging, "--pre-hook", "service nginx stop", "--post-hook", "service nginx start", "-d", domain).CombinedOutput()
 		if err != nil {
 			auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
-			log.Fatal(err)
+			return
 		} else {
 			fmt.Println("CREATED CERTBOT CERTIFICATE")
 		}
@@ -239,7 +239,7 @@ server {
 		out, err = exec.Command("certbot", "certonly", "-n", "-q", "--standalone", "--agree-tos", "--email", "bjwbell@gmail.com", staging, "--pre-hook", "service nginx stop", "--post-hook", "service nginx start", "-d", phishingSite).CombinedOutput()
 		if err != nil {
 			auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
-			log.Fatal(err)
+			return
 		} else {
 			fmt.Println("CREATED CERTBOT CERTIFICATE")
 		}
@@ -248,7 +248,7 @@ server {
 		out, err := exec.Command("certbot", "certonly", "-n", "-q", "--standalone", "--agree-tos", "--email", "bjwbell@gmail.com", "--pre-hook", "service nginx stop", "--post-hook", "service nginx start", "-d", domain).CombinedOutput()
 		if err != nil {
 			auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
-			log.Fatal(err)
+			return
 		} else {
 			fmt.Println("CREATED CERTBOT CERTIFICATE")
 		}
@@ -256,7 +256,7 @@ server {
 		out, err = exec.Command("certbot", "certonly", "-n", "-q", "--standalone", "--agree-tos", "--email", "bjwbell@gmail.com", "--pre-hook", "service nginx stop", "--post-hook", "service nginx start", "-d", phishingSite).CombinedOutput()
 		if err != nil {
 			auth.LogError(fmt.Sprintf("CERTBOT ERROR, err: %v, stdout: %v", err, string(out)))
-			log.Fatal(err)
+			return
 		} else {
 			fmt.Println("CREATED CERTBOT CERTIFICATE")
 		}
